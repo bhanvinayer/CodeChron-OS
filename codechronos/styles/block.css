@@ -1,0 +1,448 @@
+/* Block 2015 Theme - Colorful drag-and-drop coding interface */
+
+.block-theme {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+    color: #1f2937;
+}
+
+/* Block Editor Layout */
+.block-editor {
+    display: flex;
+    height: 100vh;
+    gap: 16px;
+    padding: 16px;
+}
+
+.block-palette {
+    min-width: 200px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.block-canvas {
+    flex: 1;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 2px dashed #d1d5db;
+    padding: 24px;
+    position: relative;
+    overflow: auto;
+}
+
+.block-output {
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Block Palette */
+.palette-section {
+    margin-bottom: 24px;
+}
+
+.palette-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.palette-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Block Styles */
+.block {
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-weight: 600;
+    cursor: grab;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    user-select: none;
+    position: relative;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: rotate(-1deg);
+}
+
+.block:hover {
+    transform: rotate(0deg) translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.block:active {
+    cursor: grabbing;
+    transform: rotate(0deg) scale(0.98);
+}
+
+/* Block Types */
+.block.logic {
+    background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+    border-color: #1e40af;
+}
+
+.block.variable {
+    background: linear-gradient(45deg, #10b981, #047857);
+    border-color: #065f46;
+}
+
+.block.control {
+    background: linear-gradient(45deg, #f59e0b, #d97706);
+    border-color: #b45309;
+}
+
+.block.function {
+    background: linear-gradient(45deg, #ef4444, #dc2626);
+    border-color: #b91c1c;
+}
+
+.block.ui {
+    background: linear-gradient(45deg, #14b8a6, #0d9488);
+    border-color: #0f766e;
+}
+
+.block.input {
+    background: linear-gradient(45deg, #06b6d4, #0891b2);
+    border-color: #0e7490;
+}
+
+.block.output {
+    background: linear-gradient(45deg, #ec4899, #db2777);
+    border-color: #be185d;
+}
+
+/* Canvas Blocks */
+.canvas-block {
+    position: absolute;
+    cursor: move;
+    z-index: 10;
+}
+
+.canvas-block.selected {
+    z-index: 20;
+    box-shadow: 0 0 0 3px #3b82f6;
+}
+
+.canvas-block.connecting {
+    box-shadow: 0 0 0 3px #10b981;
+}
+
+/* Block Connections */
+.block-connector {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    cursor: crosshair;
+}
+
+.block-connector.input {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.block-connector.output {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.block-connector:hover {
+    background: #fbbf24;
+    border-color: #f59e0b;
+}
+
+/* Connection Lines */
+.connection-line {
+    position: absolute;
+    stroke: #6b7280;
+    stroke-width: 3;
+    fill: none;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.connection-line.active {
+    stroke: #3b82f6;
+    stroke-width: 4;
+}
+
+/* Block Parameters */
+.block-params {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255,255,255,0.95);
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 4px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 30;
+}
+
+.block:hover .block-params,
+.block.editing .block-params {
+    display: block;
+}
+
+.param-input {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #374151;
+}
+
+/* Code Output */
+.code-output {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.code-header {
+    background: #f9fafb;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.code-content {
+    padding: 16px;
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background: #1f2937;
+    color: #f9fafb;
+    max-height: 400px;
+    overflow: auto;
+}
+
+/* Syntax Highlighting */
+.code-keyword { color: #c084fc; }
+.code-string { color: #34d399; }
+.code-number { color: #fbbf24; }
+.code-comment { color: #6b7280; }
+.code-function { color: #60a5fa; }
+
+/* Toolbar */
+.block-toolbar {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toolbar-button {
+    background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.toolbar-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.toolbar-button:active {
+    transform: translateY(0);
+}
+
+.toolbar-button.secondary {
+    background: linear-gradient(45deg, #6b7280, #4b5563);
+}
+
+.toolbar-button.success {
+    background: linear-gradient(45deg, #10b981, #047857);
+}
+
+.toolbar-button.danger {
+    background: linear-gradient(45deg, #ef4444, #dc2626);
+}
+
+/* Project Panel */
+.project-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.project-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.project-item:hover {
+    background: #f3f4f6;
+}
+
+.project-item.active {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Animations */
+@keyframes blockPop {
+    0% { transform: scale(0.8) rotate(-5deg); opacity: 0; }
+    50% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+}
+
+.block-appear {
+    animation: blockPop 0.4s ease-out;
+}
+
+@keyframes blockConnect {
+    0% { stroke-dasharray: 0, 100; }
+    100% { stroke-dasharray: 100, 0; }
+}
+
+.connection-animate {
+    animation: blockConnect 0.5s ease-out;
+}
+
+@keyframes blockGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+    50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+}
+
+.block-glow {
+    animation: blockGlow 1.5s ease-in-out infinite;
+}
+
+/* Drag and Drop */
+.drag-over {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+}
+
+.drag-preview {
+    opacity: 0.7;
+    transform: rotate(5deg) scale(1.1);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Block Shadows */
+.block-shadow {
+    position: absolute;
+    background: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    transform: translate(4px, 4px);
+    z-index: -1;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .block-editor {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .block-palette {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .block-output {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .block-editor {
+        padding: 8px;
+        gap: 8px;
+    }
+    
+    .block {
+        font-size: 12px;
+        padding: 8px 12px;
+        min-height: 32px;
+    }
+    
+    .palette-blocks {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+}
+
+/* Accessibility */
+.block:focus {
+    outline: 3px solid #fbbf24;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .block, .toolbar-button, .project-item {
+        transition: none;
+    }
+    
+    .block-appear, .connection-animate, .block-glow {
+        animation: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .block-theme {
+        background: white;
+    }
+    
+    .block-palette, .block-toolbar {
+        display: none;
+    }
+    
+    .block-editor {
+        padding: 0;
+    }
+}

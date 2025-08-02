@@ -1,0 +1,141 @@
+{
+  "calculator_app": {
+    "name": "Mac Calculator 1984",
+    "era": "maccode_1984",
+    "description": "Authentic Macintosh calculator recreation",
+    "files": {
+      "main": "calculator.pas",
+      "resources": ["calc_icon.ico", "button_sounds.wav"]
+    },
+    "features": ["Basic arithmetic", "Memory functions", "Mac-style interface"],
+    "created_date": "2024-01-15",
+    "last_modified": "2024-01-15",
+    "file_size": "2.3 KB"
+  },
+  "breakout_game": {
+    "name": "Breakout Classic",
+    "era": "maccode_1984", 
+    "description": "Classic brick-breaking game with Mac aesthetics",
+    "files": {
+      "main": "breakout.pas",
+      "graphics": ["paddle.bmp", "ball.bmp", "bricks.bmp"],
+      "sounds": ["bounce.wav", "break.wav", "game_over.wav"]
+    },
+    "features": ["Physics simulation", "Score tracking", "Sound effects", "Multiple levels"],
+    "created_date": "2024-01-15",
+    "last_modified": "2024-01-16",
+    "file_size": "5.7 KB"
+  },
+  "text_editor": {
+    "name": "MacWrite Lite",
+    "era": "maccode_1984",
+    "description": "Simple text editor with Mac-style menus",
+    "files": {
+      "main": "texteditor.pas",
+      "resources": ["menu_bar.res", "icons.res"]
+    },
+    "features": ["File operations", "Basic formatting", "Find/Replace", "Print support"],
+    "created_date": "2024-01-16",
+    "last_modified": "2024-01-16", 
+    "file_size": "8.1 KB"
+  },
+  "story_adventure": {
+    "name": "Interactive Story Game",
+    "era": "blockcode_2015",
+    "description": "Choose-your-own-adventure game built with visual blocks",
+    "files": {
+      "blocks": "story_game_blocks.json",
+      "generated": "story_game.py",
+      "assets": ["forest_bg.png", "character_sprites.png"]
+    },
+    "features": ["Visual block programming", "Multiple endings", "Score system", "Save/Load game state"],
+    "created_date": "2024-01-16",
+    "last_modified": "2024-01-16",
+    "file_size": "12.4 KB",
+    "block_count": 13
+  },
+  "quiz_maker": {
+    "name": "Smart Quiz Builder",
+    "era": "blockcode_2015",
+    "description": "Interactive quiz creation tool with drag-drop questions",
+    "files": {
+      "blocks": "quiz_builder.json",
+      "generated": "quiz_app.py",
+      "data": "questions.json"
+    },
+    "features": ["Question bank", "Multiple choice/True-false", "Automatic scoring", "Results analytics"],
+    "created_date": "2024-01-16",
+    "last_modified": "2024-01-16",
+    "file_size": "9.8 KB",
+    "block_count": 18
+  },
+  "ai_finance_tracker": {
+    "name": "Smart Finance Tracker",
+    "era": "vibecode_2025",
+    "description": "AI-powered personal finance management with intelligent insights",
+    "files": {
+      "main": "ai_finance_tracker.py",
+      "data": "finance_data.json",
+      "models": "spending_patterns.pkl"
+    },
+    "features": [
+      "AI transaction categorization",
+      "Spending pattern analysis", 
+      "Smart recommendations",
+      "Predictive budgeting",
+      "Natural language queries",
+      "Automated insights"
+    ],
+    "created_date": "2024-01-16",
+    "last_modified": "2024-01-16",
+    "file_size": "15.2 KB",
+    "ai_confidence": 0.94,
+    "tokens_used": 2847
+  },
+  "code_assistant": {
+    "name": "AI Code Companion",
+    "era": "vibecode_2025",
+    "description": "Natural language programming assistant with code generation",
+    "files": {
+      "main": "code_assistant.py",
+      "prompts": "assistant_prompts.json",
+      "generated": "output_projects/"
+    },
+    "features": [
+      "Natural language to code",
+      "Code explanation and documentation",
+      "Bug detection and fixes",
+      "Performance optimization",
+      "Multi-language support",
+      "Learning from codebase"
+    ],
+    "created_date": "2024-01-16",
+    "last_modified": "2024-01-16",
+    "file_size": "22.1 KB",
+    "ai_confidence": 0.97,
+    "tokens_used": 5234
+  },
+  "smart_home_controller": {
+    "name": "Vibe Home AI",
+    "era": "vibecode_2025",
+    "description": "AI-powered smart home automation with voice control",
+    "files": {
+      "main": "smart_home.py",
+      "config": "home_devices.json",
+      "ai_models": "device_learning.pkl"
+    },
+    "features": [
+      "Voice command processing",
+      "Predictive automation",
+      "Energy optimization",
+      "Security monitoring",
+      "Mood-based lighting",
+      "Adaptive temperature control"
+    ],
+    "created_date": "2024-01-16",
+    "last_modified": "2024-01-16",
+    "file_size": "18.7 KB",
+    "ai_confidence": 0.91,
+    "tokens_used": 3891
+  }
+}

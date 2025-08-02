@@ -1,0 +1,181 @@
+{
+  "mutations": [
+    {
+      "id": "mut_001",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "era": "MacCode 1984",
+      "type": "code_creation",
+      "title": "Created Hello World Program",
+      "description": "Basic hello world program in MacPascal",
+      "changes": {
+        "files_added": ["hello_world.pas"],
+        "lines_added": 8,
+        "complexity_score": 1
+      },
+      "code_before": "",
+      "code_after": "program HelloWorld;\nbegin\n  writeln('Hello, World!');\nend.",
+      "user_notes": "First program created in the Mac 1984 environment"
+    },
+    {
+      "id": "mut_002", 
+      "timestamp": "2024-01-15T11:15:00Z",
+      "era": "MacCode 1984",
+      "type": "feature_addition",
+      "title": "Added User Input",
+      "description": "Enhanced hello world to accept user name input",
+      "changes": {
+        "files_modified": ["hello_world.pas"],
+        "lines_added": 5,
+        "lines_removed": 1,
+        "complexity_score": 2
+      },
+      "code_before": "program HelloWorld;\nbegin\n  writeln('Hello, World!');\nend.",
+      "code_after": "program HelloWorld;\nvar\n  name: string;\nbegin\n  write('Enter your name: ');\n  readln(name);\n  writeln('Hello, ', name, '!');\nend.",
+      "user_notes": "Made the program interactive"
+    },
+    {
+      "id": "mut_003",
+      "timestamp": "2024-01-15T14:20:00Z", 
+      "era": "BlockCode 2015",
+      "type": "paradigm_shift",
+      "title": "Converted to Visual Blocks",
+      "description": "Transformed Pascal code into drag-and-drop blocks",
+      "changes": {
+        "files_added": ["hello_world_blocks.json"],
+        "blocks_created": 4,
+        "complexity_score": 2
+      },
+      "code_before": "program HelloWorld;\nvar\n  name: string;\nbegin\n  write('Enter your name: ');\n  readln(name);\n  writeln('Hello, ', name, '!');\nend.",
+      "code_after": "{\n  \"blocks\": [\n    {\"type\": \"input\", \"label\": \"Get user input\", \"var\": \"name\"},\n    {\"type\": \"output\", \"label\": \"Display greeting\", \"text\": \"Hello, ${name}!\"}\n  ]\n}",
+      "user_notes": "Much easier to understand visually!"
+    },
+    {
+      "id": "mut_004",
+      "timestamp": "2024-01-15T16:45:00Z",
+      "era": "BlockCode 2015", 
+      "type": "feature_addition",
+      "title": "Added Validation Logic",
+      "description": "Added input validation and error handling blocks",
+      "changes": {
+        "files_modified": ["hello_world_blocks.json"],
+        "blocks_created": 3,
+        "complexity_score": 4
+      },
+      "code_before": "{\n  \"blocks\": [\n    {\"type\": \"input\", \"label\": \"Get user input\", \"var\": \"name\"},\n    {\"type\": \"output\", \"label\": \"Display greeting\", \"text\": \"Hello, ${name}!\"}\n  ]\n}",
+      "code_after": "{\n  \"blocks\": [\n    {\"type\": \"input\", \"label\": \"Get user input\", \"var\": \"name\"},\n    {\"type\": \"condition\", \"check\": \"name.length > 0\"},\n    {\"type\": \"output\", \"label\": \"Display greeting\", \"text\": \"Hello, ${name}!\"},\n    {\"type\": \"output\", \"label\": \"Error message\", \"text\": \"Please enter a valid name\"}\n  ]\n}",
+      "user_notes": "Added proper error handling"
+    },
+    {
+      "id": "mut_005",
+      "timestamp": "2024-01-15T18:30:00Z",
+      "era": "VibeCode 2025",
+      "type": "ai_transformation",
+      "title": "AI-Generated Enhancement",
+      "description": "Used natural language to add personality detection",
+      "changes": {
+        "files_added": ["personality_greeting.py"],
+        "ai_tokens_used": 1250,
+        "complexity_score": 8
+      },
+      "code_before": "Simple greeting program with validation",
+      "code_after": "import random\nimport nltk\n\nclass PersonalityGreeter:\n    def __init__(self):\n        self.personalities = {\n            'enthusiastic': ['Amazing!', 'Fantastic!', 'Incredible!'],\n            'calm': ['Nice to meet you', 'Hello there', 'Greetings'],\n            'playful': ['Hey there!', 'What\\'s up!', 'Howdy!']\n        }\n    \n    def detect_personality(self, name):\n        # AI-powered personality detection based on name patterns\n        if len(name) > 8:\n            return 'enthusiastic'\n        elif name.istitle():\n            return 'calm' \n        else:\n            return 'playful'\n    \n    def greet(self, name):\n        if not name or len(name.strip()) == 0:\n            return \"Please enter a valid name\"\n        \n        personality = self.detect_personality(name)\n        greeting = random.choice(self.personalities[personality])\n        return f\"{greeting} Nice to meet you, {name}!\"\n\n# Usage\ngreeter = PersonalityGreeter()\nname = input(\"What's your name? \")\nprint(greeter.greet(name))",
+      "user_notes": "AI suggested adding personality analysis - brilliant idea!"
+    },
+    {
+      "id": "mut_006",
+      "timestamp": "2024-01-16T09:15:00Z",
+      "era": "VibeCode 2025",
+      "type": "optimization",
+      "title": "Performance Optimization", 
+      "description": "AI optimized the personality detection algorithm",
+      "changes": {
+        "files_modified": ["personality_greeting.py"],
+        "performance_gain": "40%",
+        "complexity_score": 6
+      },
+      "code_before": "Basic personality detection using simple rules",
+      "code_after": "Added machine learning model for better personality prediction and caching for improved performance",
+      "user_notes": "The AI made it much faster and more accurate"
+    },
+    {
+      "id": "mut_007",
+      "timestamp": "2024-01-16T11:30:00Z",
+      "era": "VibeCode 2025",
+      "type": "feature_addition", 
+      "title": "Multi-language Support",
+      "description": "Added internationalization using AI translation",
+      "changes": {
+        "files_added": ["translations.json", "i18n_handler.py"],
+        "languages_supported": 15,
+        "complexity_score": 12
+      },
+      "code_before": "English-only greeting system",
+      "code_after": "Full internationalization with auto-detection of user's preferred language and culturally appropriate greetings",
+      "user_notes": "AI understood cultural nuances automatically"
+    },
+    {
+      "id": "mut_008",
+      "timestamp": "2024-01-16T14:45:00Z", 
+      "era": "VibeCode 2025",
+      "type": "refactoring",
+      "title": "Architecture Redesign",
+      "description": "AI suggested microservices architecture",
+      "changes": {
+        "files_added": ["greeting_service.py", "personality_service.py", "translation_service.py", "api_gateway.py"],
+        "files_removed": ["personality_greeting.py"],
+        "services_created": 4,
+        "complexity_score": 20
+      },
+      "code_before": "Monolithic greeting application",
+      "code_after": "Distributed microservices architecture with API gateway, separate services for greeting, personality analysis, and translation",
+      "user_notes": "AI designed a scalable architecture that can handle millions of users"
+    }
+  ],
+  "statistics": {
+    "total_mutations": 8,
+    "eras_used": {
+      "MacCode 1984": 2,
+      "BlockCode 2015": 2, 
+      "VibeCode 2025": 4
+    },
+    "mutation_types": {
+      "code_creation": 1,
+      "feature_addition": 3,
+      "paradigm_shift": 1,
+      "ai_transformation": 1,
+      "optimization": 1,
+      "refactoring": 1
+    },
+    "complexity_progression": [1, 2, 2, 4, 8, 6, 12, 20],
+    "lines_of_code": {
+      "total_added": 245,
+      "total_removed": 12,
+      "net_change": 233
+    },
+    "ai_usage": {
+      "total_tokens": 1250,
+      "suggestions_accepted": 12,
+      "automation_percentage": 65
+    }
+  },
+  "rollback_points": [
+    {
+      "id": "checkpoint_1",
+      "mutation_id": "mut_002",
+      "description": "Working interactive hello world in Pascal",
+      "timestamp": "2024-01-15T11:15:00Z"
+    },
+    {
+      "id": "checkpoint_2", 
+      "mutation_id": "mut_004",
+      "description": "Validated block-based implementation",
+      "timestamp": "2024-01-15T16:45:00Z"
+    },
+    {
+      "id": "checkpoint_3",
+      "mutation_id": "mut_006",
+      "description": "Optimized AI personality detection",
+      "timestamp": "2024-01-16T09:15:00Z"
+    }
+  ]
+}

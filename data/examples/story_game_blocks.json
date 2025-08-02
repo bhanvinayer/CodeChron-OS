@@ -1,0 +1,144 @@
+{
+  "project_name": "Interactive Story Game",
+  "version": "1.0",
+  "created_date": "2024-01-16",
+  "description": "A choose-your-own-adventure game built with visual blocks",
+  "blocks": [
+    {
+      "id": "start_block",
+      "type": "start",
+      "x": 100,
+      "y": 100,
+      "label": "Game Start",
+      "connections": ["intro_block"]
+    },
+    {
+      "id": "intro_block", 
+      "type": "output",
+      "x": 100,
+      "y": 200,
+      "label": "Display Intro",
+      "text": "Welcome to the Enchanted Forest! You are a brave adventurer.",
+      "connections": ["choice_block_1"]
+    },
+    {
+      "id": "choice_block_1",
+      "type": "choice",
+      "x": 100,
+      "y": 300,
+      "label": "First Choice",
+      "question": "You come to a fork in the path. Which way do you go?",
+      "options": [
+        {"text": "Take the dark, mysterious left path", "connection": "left_path_block"},
+        {"text": "Take the sunny, cheerful right path", "connection": "right_path_block"}
+      ]
+    },
+    {
+      "id": "left_path_block",
+      "type": "output", 
+      "x": 50,
+      "y": 450,
+      "label": "Left Path",
+      "text": "You venture down the dark path and discover a hidden cave with glittering treasures!",
+      "connections": ["treasure_choice"]
+    },
+    {
+      "id": "right_path_block",
+      "type": "output",
+      "x": 250,
+      "y": 450, 
+      "label": "Right Path",
+      "text": "You walk down the sunny path and meet a friendly talking fox!",
+      "connections": ["fox_choice"]
+    },
+    {
+      "id": "treasure_choice",
+      "type": "choice",
+      "x": 50,
+      "y": 550,
+      "label": "Treasure Decision",
+      "question": "What do you do with the treasure?",
+      "options": [
+        {"text": "Take as much as you can carry", "connection": "greedy_ending"},
+        {"text": "Take only what you need", "connection": "wise_ending"}
+      ]
+    },
+    {
+      "id": "fox_choice",
+      "type": "choice",
+      "x": 250,
+      "y": 550,
+      "label": "Fox Interaction", 
+      "question": "The fox offers to guide you. Do you trust it?",
+      "options": [
+        {"text": "Follow the fox", "connection": "fox_guide_ending"},
+        {"text": "Continue alone", "connection": "alone_ending"}
+      ]
+    },
+    {
+      "id": "greedy_ending",
+      "type": "end",
+      "x": 0,
+      "y": 650,
+      "label": "Greedy Ending",
+      "text": "You become too greedy and the cave collapses! You escape but learn a valuable lesson about greed.",
+      "score": 3
+    },
+    {
+      "id": "wise_ending", 
+      "type": "end",
+      "x": 100,
+      "y": 650,
+      "label": "Wise Ending",
+      "text": "Your wisdom impresses the cave guardian, who grants you a magical artifact! You win!",
+      "score": 5
+    },
+    {
+      "id": "fox_guide_ending",
+      "type": "end",
+      "x": 200,
+      "y": 650,
+      "label": "Fox Guide Ending",
+      "text": "The fox leads you to a secret garden where you become the guardian of nature! Perfect ending!",
+      "score": 5
+    },
+    {
+      "id": "alone_ending",
+      "type": "end", 
+      "x": 300,
+      "y": 650,
+      "label": "Solo Ending",
+      "text": "You find your own way and discover you're braver than you thought! A good ending.",
+      "score": 4
+    },
+    {
+      "id": "score_tracker",
+      "type": "variable",
+      "x": 400,
+      "y": 100,
+      "label": "Score Tracker",
+      "variable_name": "player_score",
+      "initial_value": 0
+    },
+    {
+      "id": "name_input",
+      "type": "input",
+      "x": 400,
+      "y": 200,
+      "label": "Player Name",
+      "prompt": "What is your name, brave adventurer?",
+      "variable": "player_name"
+    }
+  ],
+  "variables": {
+    "player_name": "",
+    "player_score": 0,
+    "choices_made": []
+  },
+  "settings": {
+    "auto_save": true,
+    "sound_effects": true,
+    "animation_speed": "medium"
+  },
+  "generated_code": "# Auto-generated Python code from blocks\n\nclass StoryGame:\n    def __init__(self):\n        self.player_name = ''\n        self.player_score = 0\n        self.choices_made = []\n    \n    def start_game(self):\n        self.player_name = input('What is your name, brave adventurer? ')\n        print(f'Welcome to the Enchanted Forest, {self.player_name}! You are a brave adventurer.')\n        self.first_choice()\n    \n    def first_choice(self):\n        print('You come to a fork in the path. Which way do you go?')\n        print('1. Take the dark, mysterious left path')\n        print('2. Take the sunny, cheerful right path')\n        \n        choice = input('Enter your choice (1 or 2): ')\n        self.choices_made.append(choice)\n        \n        if choice == '1':\n            self.left_path()\n        elif choice == '2':\n            self.right_path()\n        else:\n            print('Invalid choice, please try again.')\n            self.first_choice()\n    \n    def left_path(self):\n        print('You venture down the dark path and discover a hidden cave with glittering treasures!')\n        self.treasure_choice()\n    \n    def right_path(self):\n        print('You walk down the sunny path and meet a friendly talking fox!')\n        self.fox_choice()\n    \n    def treasure_choice(self):\n        print('What do you do with the treasure?')\n        print('1. Take as much as you can carry')\n        print('2. Take only what you need')\n        \n        choice = input('Enter your choice (1 or 2): ')\n        self.choices_made.append(choice)\n        \n        if choice == '1':\n            self.greedy_ending()\n        elif choice == '2':\n            self.wise_ending()\n        else:\n            print('Invalid choice, please try again.')\n            self.treasure_choice()\n    \n    def fox_choice(self):\n        print('The fox offers to guide you. Do you trust it?')\n        print('1. Follow the fox')\n        print('2. Continue alone')\n        \n        choice = input('Enter your choice (1 or 2): ')\n        self.choices_made.append(choice)\n        \n        if choice == '1':\n            self.fox_guide_ending()\n        elif choice == '2':\n            self.alone_ending()\n        else:\n            print('Invalid choice, please try again.')\n            self.fox_choice()\n    \n    def greedy_ending(self):\n        self.player_score = 3\n        print('You become too greedy and the cave collapses! You escape but learn a valuable lesson about greed.')\n        self.show_final_score()\n    \n    def wise_ending(self):\n        self.player_score = 5\n        print('Your wisdom impresses the cave guardian, who grants you a magical artifact! You win!')\n        self.show_final_score()\n    \n    def fox_guide_ending(self):\n        self.player_score = 5\n        print('The fox leads you to a secret garden where you become the guardian of nature! Perfect ending!')\n        self.show_final_score()\n    \n    def alone_ending(self):\n        self.player_score = 4\n        print('You find your own way and discover you\\'re braver than you thought! A good ending.')\n        self.show_final_score()\n    \n    def show_final_score(self):\n        print(f'\\n=== Game Over ====')\n        print(f'Player: {self.player_name}')\n        print(f'Final Score: {self.player_score}/5')\n        print(f'Choices Made: {\", \".join(self.choices_made)}')\n        \n        if self.player_score == 5:\n            print('Excellent! You made all the right choices!')\n        elif self.player_score >= 3:\n            print('Good job! You learned from your adventure!')\n        else:\n            print('Better luck next time! Every adventure teaches us something.')\n\n# Run the game\nif __name__ == '__main__':\n    game = StoryGame()\n    game.start_game()"
+}

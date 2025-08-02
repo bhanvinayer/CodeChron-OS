@@ -1,0 +1,400 @@
+/* Mac 1984 Classic Theme */
+
+.mac-theme {
+    font-family: 'Press Start 2P', monospace;
+    image-rendering: pixelated;
+    background: #f0f0f0;
+    color: #000;
+}
+
+/* Mac Desktop */
+.mac-desktop {
+    background: #f0f0f0;
+    background-image: 
+        radial-gradient(circle at 25% 25%, #e0e0e0 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, #e0e0e0 1px, transparent 1px);
+    background-size: 20px 20px;
+    min-height: 100vh;
+}
+
+/* Mac Windows */
+.mac-window {
+    background: white;
+    border: 2px solid black;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.8);
+    font-family: 'Press Start 2P', monospace;
+    position: absolute;
+}
+
+.mac-window-title {
+    background: #ddd;
+    border-bottom: 1px solid black;
+    padding: 4px 8px;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: move;
+}
+
+.mac-window-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.mac-window-control {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #999;
+    background: #ddd;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mac-window-control:hover {
+    background: #bbb;
+}
+
+.mac-window-control.close {
+    background: #ff6b6b;
+}
+
+.mac-window-control.minimize {
+    background: #ffd93d;
+}
+
+.mac-window-control.maximize {
+    background: #6bcf7f;
+}
+
+/* Mac Buttons */
+.mac-button {
+    background: #ffffff;
+    border: 2px outset #cccccc;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: black;
+    text-align: center;
+    min-width: 60px;
+}
+
+.mac-button:hover {
+    background: #f0f0f0;
+}
+
+.mac-button:active {
+    border: 2px inset #cccccc;
+    background: #e0e0e0;
+}
+
+.mac-button:disabled {
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* Mac Menu Bar */
+.mac-menubar {
+    background: white;
+    border-bottom: 2px solid black;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 8px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.mac-menu-item {
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+.mac-menu-item:hover {
+    background: #333;
+    color: white;
+}
+
+/* Mac Icons */
+.mac-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    max-width: 60px;
+    text-align: center;
+}
+
+.mac-icon:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+.mac-icon:active {
+    background: rgba(0,0,0,0.2);
+}
+
+.mac-icon-image {
+    font-size: 24px;
+}
+
+.mac-icon-label {
+    font-size: 6px;
+    word-wrap: break-word;
+    line-height: 1.2;
+}
+
+/* Mac Input Fields */
+.mac-input {
+    border: 2px inset #ccc;
+    background: white;
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 4px;
+    color: black;
+}
+
+.mac-input:focus {
+    outline: none;
+    border-color: #000;
+}
+
+/* Mac Textarea */
+.mac-textarea {
+    border: 2px inset #ccc;
+    background: white;
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 8px;
+    color: black;
+    resize: none;
+}
+
+.mac-textarea:focus {
+    outline: none;
+    border-color: #000;
+}
+
+/* Mac Scrollbars */
+.mac-theme ::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+.mac-theme ::-webkit-scrollbar-track {
+    background: #ddd;
+    border: 1px solid #999;
+}
+
+.mac-theme ::-webkit-scrollbar-thumb {
+    background: #999;
+    border: 1px solid #666;
+}
+
+.mac-theme ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+.mac-theme ::-webkit-scrollbar-corner {
+    background: #ddd;
+}
+
+/* Mac Calculator */
+.mac-calculator {
+    background: #333;
+    border: 2px solid black;
+    padding: 8px;
+}
+
+.mac-calculator-display {
+    background: black;
+    color: #0f0;
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    padding: 8px;
+    text-align: right;
+    border: 2px inset #666;
+    margin-bottom: 8px;
+    min-height: 24px;
+}
+
+.mac-calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.mac-calc-button {
+    background: #ddd;
+    border: 2px outset #ccc;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 12px;
+    cursor: pointer;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mac-calc-button:hover {
+    background: #bbb;
+}
+
+.mac-calc-button:active {
+    border: 2px inset #ccc;
+}
+
+.mac-calc-button.operator {
+    background: #f66;
+}
+
+.mac-calc-button.equals {
+    background: #6f6;
+}
+
+.mac-calc-button.zero {
+    grid-column: span 2;
+}
+
+/* Mac Drawing App */
+.mac-draw-canvas {
+    border: 2px inset #ccc;
+    background: white;
+    cursor: crosshair;
+}
+
+.mac-draw-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    background: #f0f0f0;
+    border-right: 1px solid #999;
+}
+
+.mac-draw-tool {
+    width: 32px;
+    height: 32px;
+    border: 2px outset #ccc;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.mac-draw-tool:hover {
+    background: #bbb;
+}
+
+.mac-draw-tool.active {
+    border: 2px inset #ccc;
+    background: #aaa;
+}
+
+/* Mac Breakout Game */
+.mac-breakout {
+    background: black;
+    border: 2px solid #333;
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.mac-breakout-canvas {
+    border: 1px solid #666;
+    background: black;
+}
+
+.mac-breakout-hud {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: #333;
+    font-size: 8px;
+}
+
+.mac-breakout-controls {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    justify-content: center;
+}
+
+/* Draggable Elements */
+.draggable {
+    cursor: move;
+    user-select: none;
+}
+
+.draggable:active {
+    cursor: grabbing;
+}
+
+/* Animations */
+@keyframes mac-boot {
+    0% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.mac-boot-animation {
+    animation: mac-boot 2s ease-out;
+}
+
+/* Pixel Perfect */
+.pixel-perfect {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges; 
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Mac System Fonts */
+@font-face {
+    font-family: 'Chicago';
+    src: url('../assets/fonts/Chicago.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Geneva';
+    src: url('../assets/fonts/Geneva.ttf') format('truetype');
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .mac-window {
+        max-width: 90vw;
+        max-height: 80vh;
+    }
+    
+    .mac-icon {
+        max-width: 50px;
+    }
+    
+    .mac-icon-image {
+        font-size: 20px;
+    }
+    
+    .mac-icon-label {
+        font-size: 5px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2) {
+    .pixel-perfect {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
