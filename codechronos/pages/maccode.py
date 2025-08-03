@@ -9,6 +9,7 @@ from ..components.calculator import calculator_component
 from ..components.notepad import notepad_component
 from ..components.mac_draw import mac_draw
 from ..components.breakout import breakout_component
+from ..components.interface_builder import interface_builder
 
 class MacCodeState(rx.State):
     """State for Mac 1984 interface"""
@@ -30,6 +31,10 @@ class MacCodeState(rx.State):
     breakout_active: bool = False
     breakout_x: int = 300
     breakout_y: int = 200
+    
+    interface_builder_active: bool = False
+    interface_builder_x: int = 100
+    interface_builder_y: int = 60
     
     # Desktop state
     selected_icon: str = ""
@@ -58,6 +63,12 @@ class MacCodeState(rx.State):
         self.breakout_active = True
         self.selected_icon = "breakout"
     
+    def open_interface_builder(self):
+        """Open Interface Builder"""
+        print("Opening Interface Builder")  # Debug print
+        self.interface_builder_active = True
+        self.selected_icon = "interface_builder"
+    
     def close_calculator(self):
         """Close Calculator"""
         self.calculator_active = False
@@ -73,6 +84,10 @@ class MacCodeState(rx.State):
     def close_breakout(self):
         """Close Breakout"""
         self.breakout_active = False
+    
+    def close_interface_builder(self):
+        """Close Interface Builder"""
+        self.interface_builder_active = False
     
     def clear_selection(self):
         """Clear icon selection"""
@@ -255,6 +270,21 @@ def application_windows() -> rx.Component:
             rx.box()
         ),
         
+        # Interface Builder window
+        rx.cond(
+            MacCodeState.interface_builder_active,
+            mac_window(
+                "Interface Builder",
+                interface_builder(),
+                MacCodeState.interface_builder_x,
+                MacCodeState.interface_builder_y,
+                width="800px",
+                height="600px",
+                on_close=MacCodeState.close_interface_builder
+            ),
+            rx.box()
+        ),
+        
         position="relative",
         width="100%",
         height="100%",
@@ -341,6 +371,29 @@ def mac_desktop() -> rx.Component:
             position="absolute",
             left="20px",
             top="300px",
+            width="80px",
+            height="60px",
+            bg="#e0e0e0",
+            border="1px solid black",
+            font_size="10px",
+            font_family="'Press Start 2P', monospace",
+            color="black",
+            cursor="pointer",
+            z_index="100",
+            style={
+                "white-space": "pre-line",
+                "text-align": "center",
+                "&:hover": {"background": "rgba(0,0,0,0.1)"}
+            }
+        ),
+        
+        # Interface Builder icon
+        rx.button(
+            "🏗️\nIB",
+            on_click=MacCodeState.open_interface_builder,
+            position="absolute",
+            left="20px",
+            top="380px",
             width="80px",
             height="60px",
             bg="#e0e0e0",
