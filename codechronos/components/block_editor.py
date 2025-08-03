@@ -20,6 +20,9 @@ class BlockEditorState(rx.State):
     selected_block_type: str = "print"
     canvas_blocks: List[CanvasBlock] = []
     generated_code: str = ""
+    editing_block_id: int = -1
+    edit_parameter: str = ""
+    edit_value: str = ""
     
     def add_block(self, block_type: str):
         """Add a new block to the canvas"""
@@ -32,9 +35,34 @@ class BlockEditorState(rx.State):
         )
         self.canvas_blocks.append(new_block)
     
+    def start_editing(self, block_id: int, parameter: str, current_value: str):
+        """Start editing a block parameter"""
+        self.editing_block_id = block_id
+        self.edit_parameter = parameter
+        self.edit_value = current_value
+    
+    def save_edit(self):
+        """Save the edited parameter value"""
+        if self.editing_block_id >= 0 and self.editing_block_id < len(self.canvas_blocks):
+            self.canvas_blocks[self.editing_block_id].parameters[self.edit_parameter] = self.edit_value
+        self.editing_block_id = -1
+        self.edit_parameter = ""
+        self.edit_value = ""
+    
+    def cancel_edit(self):
+        """Cancel editing"""
+        self.editing_block_id = -1
+        self.edit_parameter = ""
+        self.edit_value = ""
+    
+    def set_edit_value(self, value: str):
+        """Set the edit value"""
+        self.edit_value = value
+    
     def get_default_parameters(self, block_type: str) -> Dict[str, str]:
         """Get default parameters for block type"""
         defaults = {
+            "constant": {"name": "PI", "value": "3.14159"},
             "print": {"text": "Hello World!"},
             "variable": {"name": "x", "value": "10"},
             "if": {"condition": "x > 5"},
@@ -51,7 +79,11 @@ class BlockEditorState(rx.State):
         code_lines = []
         
         for block in self.canvas_blocks:
-            if block.type == "print":
+            if block.type == "constant":
+                name = block.parameters['name']
+                value = block.parameters['value']
+                code_lines.append(f"{name} = {value}")
+            elif block.type == "print":
                 code_lines.append(f"print('{block.parameters['text']}')")
             elif block.type == "variable":
                 code_lines.append(f"{block.parameters['name']} = {block.parameters['value']}")
@@ -97,39 +129,46 @@ def block_palette() -> rx.Component:
         rx.text("Logic Blocks", size="3", weight="bold", color="blue"),
         rx.vstack(
             rx.button(
+                "Constant", 
+                on_click=lambda: BlockEditorState.add_block("constant"),
+                width="120px",
+                color_scheme="indigo",
+                style={"background": "linear-gradient(45deg, #C7D2FE, #A5B4FC)"}  # Pastel indigo
+            ),
+            rx.button(
                 "Print", 
                 on_click=lambda: BlockEditorState.add_block("print"),
                 width="120px",
                 color_scheme="blue",
-                style={"background": "linear-gradient(45deg, #3b82f6, #1d4ed8)"}
+                style={"background": "linear-gradient(45deg, #93C5FD, #60A5FA)"}  # Pastel blue
             ),
             rx.button(
                 "Variable",
                 on_click=lambda: BlockEditorState.add_block("variable"), 
                 width="120px",
                 color_scheme="green",
-                style={"background": "linear-gradient(45deg, #10b981, #047857)"}
+                style={"background": "linear-gradient(45deg, #86EFAC, #4ADE80)"}  # Pastel green
             ),
             rx.button(
                 "If Statement",
                 on_click=lambda: BlockEditorState.add_block("if"),
                 width="120px", 
                 color_scheme="orange",
-                style={"background": "linear-gradient(45deg, #f59e0b, #d97706)"}
+                style={"background": "linear-gradient(45deg, #FCD34D, #F59E0B)"}  # Pastel orange
             ),
             rx.button(
                 "For Loop",
                 on_click=lambda: BlockEditorState.add_block("for"),
                 width="120px",
                 color_scheme="purple", 
-                style={"background": "linear-gradient(45deg, #8b5cf6, #7c3aed)"}
+                style={"background": "linear-gradient(45deg, #C4B5FD, #A78BFA)"}  # Pastel purple
             ),
             rx.button(
                 "Function",
                 on_click=lambda: BlockEditorState.add_block("function"),
                 width="120px",
                 color_scheme="red",
-                style={"background": "linear-gradient(45deg, #ef4444, #dc2626)"}
+                style={"background": "linear-gradient(45deg, #FCA5A5, #F87171)"}  # Pastel red
             ),
             spacing="2"
         ),
@@ -141,21 +180,21 @@ def block_palette() -> rx.Component:
                 on_click=lambda: BlockEditorState.add_block("button"),
                 width="120px",
                 color_scheme="teal",
-                style={"background": "linear-gradient(45deg, #14b8a6, #0d9488)"}
+                style={"background": "linear-gradient(45deg, #5EEAD4, #2DD4BF)"}  # Pastel teal
             ),
             rx.button(
                 "Text Input", 
                 on_click=lambda: BlockEditorState.add_block("input"),
                 width="120px",
                 color_scheme="cyan",
-                style={"background": "linear-gradient(45deg, #06b6d4, #0891b2)"}
+                style={"background": "linear-gradient(45deg, #67E8F9, #22D3EE)"}  # Pastel cyan
             ),
             rx.button(
                 "Slider",
                 on_click=lambda: BlockEditorState.add_block("slider"),
                 width="120px",
                 color_scheme="pink",
-                style={"background": "linear-gradient(45deg, #ec4899, #db2777)"}
+                style={"background": "linear-gradient(45deg, #F9A8D4, #EC4899)"}  # Pastel pink
             ),
             spacing="2"
         ),
@@ -176,37 +215,130 @@ def block_palette() -> rx.Component:
     )
 
 def render_block(block: CanvasBlock) -> rx.Component:
-    """Render a single block"""
-    return rx.box(
-        rx.text(
-            block.type.upper(),
-            size="2",
-            weight="bold",
-            color="white"
-        ),
-        padding="0.5rem",
-        margin="0.5rem",
-        bg=rx.cond(
-            block.type == "print", "blue",
+    """Render a single block with editable parameters"""
+    
+    # Get block color
+    block_color = rx.cond(
+        block.type == "constant", "#C7D2FE",   # Pastel indigo for constants
+        rx.cond(
+            block.type == "print", "#93C5FD",      # Pastel blue
             rx.cond(
-                block.type == "variable", "green",
+                block.type == "variable", "#86EFAC",   # Pastel green
                 rx.cond(
-                    block.type == "if", "orange",
+                    block.type == "if", "#FCD34D",         # Pastel orange
                     rx.cond(
-                        block.type == "for", "purple",
+                        block.type == "for", "#C4B5FD",        # Pastel purple
                         rx.cond(
-                            block.type == "function", "red",
-                            "teal"
+                            block.type == "function", "#FCA5A5",   # Pastel red
+                            rx.cond(
+                                block.type == "button", "#5EEAD4",     # Pastel teal
+                                rx.cond(
+                                    block.type == "input", "#67E8F9",      # Pastel cyan
+                                    "#F9A8D4"                              # Pastel pink (slider)
+                                )
+                            )
                         )
                     )
                 )
             )
+        )
+    )
+    
+    # Create parameter display based on block type using rx.cond
+    parameter_display = rx.cond(
+        block.type == "constant",
+        rx.vstack(
+            rx.text(f"name: {block.parameters['name']}", size="1", color="white"),
+            rx.text(f"value: {block.parameters['value']}", size="1", color="white"),
+            spacing="1"
         ),
-        border_radius="8px",
+        rx.cond(
+            block.type == "print",
+            rx.text(f"text: {block.parameters['text']}", size="1", color="white"),
+            rx.cond(
+                block.type == "variable",
+                rx.vstack(
+                    rx.text(f"name: {block.parameters['name']}", size="1", color="white"),
+                    rx.text(f"value: {block.parameters['value']}", size="1", color="white"),
+                    spacing="1"
+                ),
+                rx.cond(
+                    block.type == "if",
+                    rx.text(f"condition: {block.parameters['condition']}", size="1", color="white"),
+                    rx.cond(
+                        block.type == "for",
+                        rx.vstack(
+                            rx.text(f"variable: {block.parameters['variable']}", size="1", color="white"),
+                            rx.text(f"start: {block.parameters['start']}", size="1", color="white"),
+                            rx.text(f"end: {block.parameters['end']}", size="1", color="white"),
+                            spacing="1"
+                        ),
+                        rx.cond(
+                            block.type == "function",
+                            rx.vstack(
+                                rx.text(f"name: {block.parameters['name']}", size="1", color="white"),
+                                rx.text(f"params: {block.parameters['params']}", size="1", color="white"),
+                                spacing="1"
+                            ),
+                            rx.cond(
+                                block.type == "button",
+                                rx.vstack(
+                                    rx.text(f"text: {block.parameters['text']}", size="1", color="white"),
+                                    rx.text(f"action: {block.parameters['action']}", size="1", color="white"),
+                                    spacing="1"
+                                ),
+                                rx.cond(
+                                    block.type == "input",
+                                    rx.vstack(
+                                        rx.text(f"label: {block.parameters['label']}", size="1", color="white"),
+                                        rx.text(f"variable: {block.parameters['variable']}", size="1", color="white"),
+                                        spacing="1"
+                                    ),
+                                    rx.cond(
+                                        block.type == "slider",
+                                        rx.vstack(
+                                            rx.text(f"min: {block.parameters['min']}", size="1", color="white"),
+                                            rx.text(f"max: {block.parameters['max']}", size="1", color="white"),
+                                            rx.text(f"variable: {block.parameters['variable']}", size="1", color="white"),
+                                            spacing="1"
+                                        ),
+                                        rx.text("No parameters", size="1", color="white")
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+    
+    return rx.box(
+        rx.vstack(
+            rx.text(
+                block.type.upper(),
+                size="2",
+                weight="bold",
+                color="white"
+            ),
+            # Display parameters based on block type
+            parameter_display,
+            spacing="2"
+        ),
+        padding="0.8em 1.2em",
+        margin="0.5rem",
+        bg=block_color,
+        border_radius="6px",
         cursor="pointer",
+        width="fit-content",
+        min_width="150px",
+        max_width="200px",
+        text_align="center",
+        box_shadow="0 2px 4px rgba(0,0,0,0.15)",
         style={
             "&:hover": {
-                "transform": "scale(1.05)"
+                "transform": "translateY(-1px)",
+                "box_shadow": "0 3px 6px rgba(0,0,0,0.25)"
             }
         }
     )
