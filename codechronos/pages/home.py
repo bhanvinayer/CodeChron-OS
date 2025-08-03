@@ -116,7 +116,8 @@ def era_selection() -> rx.Component:
                 font_size="36px",
                 font_weight="bold",
                 margin_bottom="3rem",
-                text_align="center"
+                text_align="center",
+                color="#1a1a1a"  # Explicit dark color to prevent gray inheritance
             ),
             
             rx.hstack(
@@ -128,7 +129,7 @@ def era_selection() -> rx.Component:
                             "Mac 1984",
                             font_size="24px",
                             font_weight="bold",
-                            color="#333"
+                            color="#1a1a1a"  # Darker for better contrast
                         ),
                         rx.text(
                             "Classic Macintosh interface with pixel-perfect retro charm",
@@ -152,13 +153,12 @@ def era_selection() -> rx.Component:
                     border_radius="12px",
                     bg="white",
                     cursor="pointer",
-                    style={
-                        "transition": "all 0.3s ease",
-                        "&:hover": {
-                            "transform": "translateY(-5px)",
-                            "box_shadow": "0 10px 25px rgba(0,0,0,0.1)"
-                        }
-                    }
+                    _hover={
+                        "transform": "translateY(-5px)",
+                        "box_shadow": "0 10px 25px rgba(0,0,0,0.1)",
+                        "border_color": "#cbd5e1"
+                    },
+                    transition="all 0.3s ease"
                 ),
                 
                 # 2015 Block Era  
@@ -193,13 +193,12 @@ def era_selection() -> rx.Component:
                     border_radius="12px",
                     bg="white",
                     cursor="pointer",
-                    style={
-                        "transition": "all 0.3s ease",
-                        "&:hover": {
-                            "transform": "translateY(-5px)",
-                            "box_shadow": "0 10px 25px rgba(59, 130, 246, 0.1)"
-                        }
-                    }
+                    _hover={
+                        "transform": "translateY(-5px)",
+                        "box_shadow": "0 10px 25px rgba(59, 130, 246, 0.1)",
+                        "border_color": "#93c5fd"
+                    },
+                    transition="all 0.3s ease"
                 ),
                 
                 # 2025 AI Era
@@ -234,13 +233,52 @@ def era_selection() -> rx.Component:
                     border_radius="12px",
                     bg="white",
                     cursor="pointer",
-                    style={
-                        "transition": "all 0.3s ease",
-                        "&:hover": {
-                            "transform": "translateY(-5px)",
-                            "box_shadow": "0 10px 25px rgba(139, 92, 246, 0.1)"
-                        }
-                    }
+                    _hover={
+                        "transform": "translateY(-5px)",
+                        "box_shadow": "0 10px 25px rgba(139, 92, 246, 0.1)",
+                        "border_color": "#c4b5fd"
+                    },
+                    transition="all 0.3s ease"
+                ),
+                
+                # Python 202X Era
+                rx.box(
+                    rx.vstack(
+                        rx.text("🐍", font_size="80px"),
+                        rx.text(
+                            "Python 202X",
+                            font_size="24px",
+                            font_weight="bold",
+                            color="#16a34a"
+                        ),
+                        rx.text(
+                            "Classic Python playground with games and tools",
+                            font_size="14px",
+                            color="#666",
+                            text_align="center",
+                            max_width="200px"
+                        ),
+                        rx.button(
+                            "Enter Playground",
+                            on_click=lambda: rx.redirect("/playground"),
+                            color_scheme="green", 
+                            size="3",
+                            margin_top="1rem"
+                        ),
+                        spacing="3",
+                        align="center"
+                    ),
+                    padding="2rem",
+                    border="2px solid #bbf7d0",
+                    border_radius="12px",
+                    bg="white",
+                    cursor="pointer",
+                    _hover={
+                        "transform": "translateY(-5px)",
+                        "box_shadow": "0 10px 25px rgba(22, 163, 74, 0.1)",
+                        "border_color": "#86efac"
+                    },
+                    transition="all 0.3s ease"
                 ),
                 
                 spacing="4",
@@ -250,7 +288,7 @@ def era_selection() -> rx.Component:
             rx.text(
                 "Click on any era to begin your journey through software development history",
                 font_size="16px",
-                color="#888",
+                color="#6b7280",  # Better gray color
                 text_align="center",
                 margin_top="3rem"
             ),

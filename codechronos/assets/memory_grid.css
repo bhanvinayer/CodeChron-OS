@@ -1,0 +1,35 @@
+.memory-grid-easy {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+    justify-items: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 600px !important;
+}
+
+.memory-grid-medium {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+    justify-items: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 600px !important;
+}
+
+.memory-grid-hard {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 20px !important;
+    justify-items: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 900px !important;
+}
+
+.memory-card {
+    width: 120px !important;
+    height: 120px !important;
+    flex-shrink: 0 !important;
+}

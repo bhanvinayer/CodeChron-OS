@@ -15,6 +15,7 @@ from .pages.home import home_page
 from .pages.maccode import maccode_page
 from .pages.blockcode import blockcode_page
 from .pages.vibecode import vibecode_page
+from .pages.playground import playground_page
 from .pages.mutation_log import mutation_log_page
 
 # Import utils
@@ -23,8 +24,8 @@ from .utils.audio_player import AudioPlayer
 
 class State(rx.State):
     """Global application state"""
-    current_era: str = "1984"  # 1984, 2015, 2025
-    theme_mode: str = "mac1984"  # mac1984, block2015, vibe2025
+    current_era: str = "1984"  # 1984, 2015, 2025, 202X
+    theme_mode: str = "mac1984"  # mac1984, block2015, vibe2025, playground202X
     boot_complete: bool = False
     audio_enabled: bool = True
     
@@ -37,6 +38,8 @@ class State(rx.State):
             self.theme_mode = "block2015"
         elif era == "2025":
             self.theme_mode = "vibe2025"
+        elif era == "202X":
+            self.theme_mode = "playground202X"
     
     def complete_boot(self):
         """Mark boot sequence as complete"""
@@ -59,6 +62,11 @@ class State(rx.State):
     def start_vibe_era(self):
         """Start Vibe 2025 era"""
         self.set_era("2025")
+        self.complete_boot()
+    
+    def start_playground_era(self):
+        """Start Python Playground 202X era"""
+        self.set_era("202X")
         self.complete_boot()
 
 def navbar() -> rx.Component:
@@ -89,6 +97,12 @@ def navbar() -> rx.Component:
                 on_click=State.set_era("2025"),
                 variant="ghost",
                 color_scheme="purple"
+            ),
+            rx.button(
+                "Python 202X",
+                on_click=State.set_era("202X"),
+                variant="ghost",
+                color_scheme="green"
             ),
             spacing="2"
         ),
@@ -172,6 +186,23 @@ def welcome_screen() -> rx.Component:
                     border_color="purple.200",
                     border_radius="8px"
                 ),
+                rx.vstack(
+                    rx.text("🐍", font_size="4rem"),
+                    rx.text("Python 202X", font_weight="bold"),
+                    rx.text("Classic apps playground", color="gray.600"),
+                    rx.button(
+                        "Enter Playground",
+                        on_click=State.start_playground_era,
+                        color_scheme="green",
+                        size="3"
+                    ),
+                    align="center",
+                    spacing="2",
+                    padding="2rem",
+                    border="1px solid",
+                    border_color="green.200",
+                    border_radius="8px"
+                ),
                 spacing="4"
             ),
             spacing="4",
@@ -189,7 +220,11 @@ def era_content() -> rx.Component:
         rx.cond(
             State.current_era == "2015",
             blockcode_page(),
-            vibecode_page()
+            rx.cond(
+                State.current_era == "2025",
+                vibecode_page(),
+                playground_page()  # 202X era
+            )
         )
     )
 
@@ -224,4 +259,5 @@ app.add_page(index)
 app.add_page(maccode_page, route="/maccode")
 app.add_page(blockcode_page, route="/blockcode") 
 app.add_page(vibecode_page, route="/vibecode")
+app.add_page(playground_page, route="/playground")
 app.add_page(mutation_log_page, route="/logs")
