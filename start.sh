@@ -2,6 +2,9 @@
 set -e
 export PORT=${PORT:-3000}
 
+echo "📦 Installing Reflex..."
+pip install --upgrade reflex
+
 echo "🔧 Exporting Reflex production build..."
 reflex export --env prod
 
