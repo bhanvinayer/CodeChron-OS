@@ -1,3 +1,2 @@
 #!/bin/bash
-#!/bin/bash
-reflex run --env prod
+reflex run --env prod --port ${PORT:-3000}
