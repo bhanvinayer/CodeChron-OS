@@ -240,50 +240,47 @@ class ExecutionSandbox:
         
         return stats
     
-    def create_preview_server(self, code: str, port: int = 8000) -> Dict[str, Any]:
+    def create_preview_server(self, code: str, port: int = None) -> Dict[str, Any]:
         """Create a preview server for web applications"""
-        
+        import socket
+        # Use environment variable PORT if available, else default to 3000
+        port = port or int(os.environ.get("PORT", 3000))
+        host = os.environ.get("HOST", "0.0.0.0")
         # Check if code is a web app
         if not ("reflex" in code or "streamlit" in code):
             return {
                 "success": False,
                 "error": "Code is not a web application"
             }
-        
         try:
             with tempfile.TemporaryDirectory() as temp_dir:
                 # Create app file
                 app_file = os.path.join(temp_dir, "preview_app.py")
-                
-                # Modify code to run on specific port
+                # Modify code to run on specific port/host
                 if "reflex" in code:
-                    preview_code = code + f"\n\nif __name__ == '__main__':\n    app.run(port={port})"
+                    preview_code = code + f"\n\nif __name__ == '__main__':\n    app.run(host='{host}', port={port})"
                 elif "streamlit" in code:
                     preview_code = code
-                
                 with open(app_file, 'w') as f:
                     f.write(preview_code)
-                
                 # Start server in background
                 if "streamlit" in code:
-                    cmd = [sys.executable, "-m", "streamlit", "run", app_file, "--server.port", str(port)]
+                    cmd = [sys.executable, "-m", "streamlit", "run", app_file, "--server.port", str(port), "--server.address", host]
                 else:
                     cmd = [sys.executable, app_file]
-                
                 process = subprocess.Popen(
                     cmd,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     cwd=temp_dir
                 )
-                
                 # Give server time to start
                 time.sleep(2)
-                
                 if process.poll() is None:  # Process is running
+                    # Use host and port in URL
                     return {
                         "success": True,
-                        "url": f"http://localhost:{port}",
+                        "url": f"http://{host}:{port}",
                         "pid": process.pid,
                         "process": process
                     }
@@ -293,7 +290,6 @@ class ExecutionSandbox:
                         "success": False,
                         "error": f"Server failed to start: {stderr.decode()}"
                     }
-        
         except Exception as e:
             return {
                 "success": False,
