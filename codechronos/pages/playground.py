@@ -8,6 +8,9 @@ from ..components.snake_game import snake_game
 from ..components.todo_app import todo_app
 from ..components.translator_app import translator_app
 from ..components.memory_game import memory_game
+from ..components.calculator2 import calculator_component as calculator2_component
+from ..components.qr_generator_app import qr_generator_app
+from ..components.password_generator_app import password_generator_app
 
 class PlaygroundState(rx.State):
     """State for Python Playground era"""
@@ -108,109 +111,25 @@ def playground_home() -> rx.Component:
             padding="2rem",
             width="100%"
         ),
-        
-        # Apps Grid
+        # Apps Grid (2 rows, 4 columns)
         rx.box(
             rx.grid(
-                # Games Section
-                rx.box(
-                    rx.text(
-                        "🎮 Games",
-                        font_size="1.5rem",
-                        font_weight="bold",
-                        color="#1976D2",
-                        margin_bottom="1rem"
-                    ),
-                    rx.flex(
-                        app_tile("Snake Game", "🐍", "Classic snake game with scoring", "snake", "#4CAF50"),
-                        app_tile("Pong", "🏓", "Retro paddle game", "pong", "#FF9800"),
-                        app_tile("Tic Tac Toe", "⭕", "Strategic X & O game", "tictactoe", "#E91E63"),
-                        app_tile("Memory Game", "🧠", "Test your memory skills", "memory", "#9C27B0"),
-                        gap="6",
-                        wrap="wrap"
-                    ),
-                    margin_bottom="2rem"
-                ),
-                
-                # Utilities Section
-                rx.box(
-                    rx.text(
-                        "🛠️ Utilities",
-                        font_size="1.5rem",
-                        font_weight="bold",
-                        color="#1976D2",
-                        margin_bottom="1rem"
-                    ),
-                    rx.flex(
-                        app_tile("Translator", "🌐", "Multi-language translator", "translator", "#2196F3"),
-                        app_tile("Todo List", "📝", "Task management app", "todo", "#607D8B"),
-                        app_tile("Calculator", "🧮", "Advanced calculator", "calculator", "#795548"),
-                        app_tile("Text Editor", "📄", "Simple text editor", "editor", "#009688"),
-                        gap="6",
-                        wrap="wrap"
-                    ),
-                    margin_bottom="2rem"
-                ),
-                
-                # Creative Section
-                rx.box(
-                    rx.text(
-                        "🎨 Creative",
-                        font_size="1.5rem",
-                        font_weight="bold",
-                        color="#1976D2",
-                        margin_bottom="1rem"
-                    ),
-                    rx.flex(
-                        app_tile("Paint", "🎨", "Digital painting app", "paint", "#F44336"),
-                        app_tile("Music Player", "🎵", "Audio player with playlist", "music", "#673AB7"),
-                        app_tile("QR Generator", "📱", "Generate QR codes", "qr", "#3F51B5"),
-                        app_tile("Password Gen", "🔐", "Secure password generator", "password", "#FF5722"),
-                        gap="6",
-                        wrap="wrap"
-                    )
-                ),
-                
-                gap="8",
-                columns="1",
+                app_tile("Snake Game", "🐍", "Classic snake game with scoring", "snake", "#4CAF50"),
+                app_tile("Todo List", "📝", "Task management app", "todo", "#607D8B"),
+                app_tile("Memory Game", "🧠", "Test your memory skills", "memory", "#9C27B0"),
+                app_tile("Translator", "🌐", "Multi-language translator", "translator", "#2196F3"),
+                app_tile("Calculator", "🧮", "Advanced calculator", "calculator", "#795548"),
+                app_tile("QR Generator", "📱", "Generate QR codes", "qr", "#3F51B5"),
+                app_tile("Password Gen", "🔐", "Secure password generator", "password", "#FF5722"),
+                app_tile("Text Editor", "📄", "Simple text editor", "editor", "#009688"),
+                columns="4",
+                gap="2rem",
                 width="100%"
             ),
             max_width="1200px",
             margin="0 auto",
             padding="0 2rem"
         ),
-        
-        # Footer Stats
-        rx.box(
-            rx.hstack(
-                rx.vstack(
-                    rx.text(PlaygroundState.high_scores["snake"], font_size="2rem", font_weight="bold", color="#4CAF50"),
-                    rx.text("Snake High Score", font_size="0.9rem", color="#666"),
-                    rx.text("🐍", font_size="1.2rem"),
-                    align="center"
-                ),
-                rx.vstack(
-                    rx.text(PlaygroundState.high_scores["pong"], font_size="2rem", font_weight="bold", color="#FF9800"),
-                    rx.text("Pong High Score", font_size="0.9rem", color="#666"),
-                    rx.text("🏓", font_size="1.2rem"),
-                    align="center"
-                ),
-                rx.vstack(
-                    rx.text("12", font_size="2rem", font_weight="bold", color="#2196F3"),
-                    rx.text("Total Apps", font_size="0.9rem", color="#666"),
-                    rx.text("🚀", font_size="1.2rem"),
-                    align="center"
-                ),
-                justify="center",
-                spacing="8"
-            ),
-            bg="rgba(255,255,255,0.9)",
-            padding="2rem",
-            border_radius="12px",
-            margin="2rem",
-            box_shadow="0 2px 10px rgba(0,0,0,0.1)"
-        ),
-        
         width="100%",
         min_height="100vh",
         bg="linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 100%)",
@@ -252,19 +171,28 @@ def playground_page() -> rx.Component:
                             translator_app(),
                             rx.cond(
                                 PlaygroundState.current_app == "calculator",
-                                rx.center(
-                                    rx.text("🧮 Advanced Calculator Coming Soon!", font_size="2rem"),
-                                    height="70vh"
-                                ),
+                                calculator2_component(),
                                 rx.cond(
-                                    PlaygroundState.current_app == "paint",
-                                    rx.center(
-                                        rx.text("🎨 Digital Paint App Coming Soon!", font_size="2rem"),
-                                        height="70vh"
-                                    ),
-                                    rx.center(
-                                        rx.text(f"🚀 {PlaygroundState.current_app.title()} App Loading...", font_size="2rem"),
-                                        height="70vh"
+                                    PlaygroundState.current_app == "editor",
+                                    __import__("codechronos.components.text_editor", fromlist=["text_editor_component"]).text_editor_component(),
+                                    rx.cond(
+                                        PlaygroundState.current_app == "qr",
+                                        qr_generator_app(),
+                                        rx.cond(
+                                            PlaygroundState.current_app == "password",
+                                            password_generator_app(),
+                                            rx.cond(
+                                                PlaygroundState.current_app == "paint",
+                                                rx.center(
+                                                    rx.text("🎨 Digital Paint App Coming Soon!", font_size="2rem"),
+                                                    height="70vh"
+                                                ),
+                                                rx.center(
+                                                    rx.text(f"🚀 {PlaygroundState.current_app.title()} App Loading...", font_size="2rem"),
+                                                    height="70vh"
+                                                )
+                                            )
+                                        )
                                     )
                                 )
                             )

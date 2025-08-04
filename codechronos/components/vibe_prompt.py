@@ -6,6 +6,7 @@ import reflex as rx
 from typing import List, Dict, Any
 import asyncio
 import json
+import os
 
 class VibePromptState(rx.State):
     """State for AI prompt interface"""
@@ -18,7 +19,7 @@ class VibePromptState(rx.State):
     dark_mode: bool = False
     
     # OpenAI configuration
-    openai_api_key: str = "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"
+    openai_api_key: str = os.environ.get("OPENAI_API_KEY", "")
     
     def toggle_dark_mode(self):
         """Toggle dark mode"""
@@ -399,7 +400,7 @@ def prompt_input() -> rx.Component:
                 "box_shadow": "0 0 0 3px rgba(59, 130, 246, 0.15)",
                 "outline": "none"
             },
-            _placeholder={"color": rx.cond(VibePromptState.dark_mode, "#6B7280", "#9CA3AF")}
+            _placeholder={"color": rx.cond(VibePromptState.dark_mode, "#0D0D0E", "#6A6F78")}
         ),
         
         # Action bar with modern button styling
@@ -797,10 +798,8 @@ def vibe_prompt_component() -> rx.Component:
         rx.box(
             rx.vstack(
                 prompt_input(),
-                
                 # Two-panel layout with closer spacing and subtle visual separation
                 rx.hstack(
-                    # Conversation panel
                     rx.box(
                         chat_history(),
                         width="48%",
@@ -813,19 +812,17 @@ def vibe_prompt_component() -> rx.Component:
                             "0 4px 6px rgba(0, 0, 0, 0.08)"
                         )
                     ),
-                    # Reduced visual splitter spacing
                     rx.box(
                         width="1px",
                         height="500px",
                         bg=rx.cond(VibePromptState.dark_mode, "#374151", "#E5E7EB"),
                         margin="0 12px"
                     ),
-                    # Code output panel  
                     rx.box(
                         code_output(),
                         width="48%",
                         bg=rx.cond(VibePromptState.dark_mode, "#1F2937", "white"),
-                        border=rx.cond(VibePromptState.dark_mode, "1px solid #374151", "1px solid #E5E7EB"), 
+                        border=rx.cond(VibePromptState.dark_mode, "1px solid #374151", "1px solid #E5E7EB"),
                         border_radius="12px",
                         box_shadow=rx.cond(
                             VibePromptState.dark_mode,
@@ -837,11 +834,10 @@ def vibe_prompt_component() -> rx.Component:
                     align="start",
                     justify="between"
                 ),
-                
                 spacing="6",
                 width="100%"
             ),
-            padding="32px",
+            padding="16px 32px 0px 32px",
             width="100%"
         ),
         

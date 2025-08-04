@@ -12,6 +12,14 @@ from ..components.breakout import breakout_component
 from ..components.interface_builder import interface_builder
 
 class MacCodeState(rx.State):
+    # Menu dropdown state
+    open_menu: str = ""
+
+    def open_menu_dropdown(self, menu: str):
+        self.open_menu = menu
+
+    def close_menu_dropdown(self):
+        self.open_menu = ""
     """State for Mac 1984 interface"""
     current_time: str = "12:00 PM"
     
@@ -177,8 +185,42 @@ def mac_window(
 
 def mac_menu_bar() -> rx.Component:
     """Classic Mac menu bar"""
-    return rx.hstack(
-        # Apple menu and main menus
+    def dropdown(menu, options):
+        return rx.cond(
+            MacCodeState.open_menu == menu,
+            rx.box(
+                # Overlay to capture outside clicks
+                rx.box(
+                    on_click=MacCodeState.close_menu_dropdown,
+                    position="fixed",
+                    top="0",
+                    left="0",
+                    width="100vw",
+                    height="100vh",
+                    z_index="9998",
+                    bg="rgba(0,0,0,0)",
+                ),
+                rx.box(
+                    rx.vstack(
+                        *[rx.text(opt, font_size="12px", padding="6px 18px", color="#222", bg="#f4f4f4", cursor="pointer", _hover={"bg": "#e0e0e0"}) for opt in options],
+                        spacing="0",
+                        align="start"
+                    ),
+                    position="absolute",
+                    top="28px",
+                    left="0" if menu == "File" else ("60px" if menu == "Edit" else ("120px" if menu == "View" else "180px")),
+                    min_width="100px",
+                    border="1.5px solid #222",
+                    border_radius="6px",
+                    box_shadow="0 2px 12px rgba(0,0,0,0.08)",
+                    z_index="9999",
+                    bg="#f4f4f4"
+                )
+            ),
+            rx.box()
+        )
+
+    return rx.box(
         rx.hstack(
             rx.box(
                 rx.text("🍎", font_size="14px"),
@@ -187,12 +229,33 @@ def mac_menu_bar() -> rx.Component:
                 padding="2px 6px",
                 cursor="pointer"
             ),
-            rx.text("File", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px"),
-            rx.text("Edit", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px"),
-            rx.text("View", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px"),
-            rx.text("Tools", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px"),
-            spacing="2"
+            rx.box(
+                rx.text("File", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px", color="#222", font_weight="bold",
+                        on_click=lambda: MacCodeState.open_menu_dropdown("File")),
+                position="relative"
+            ),
+            rx.box(
+                rx.text("Edit", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px", color="#222", font_weight="bold", 
+                        on_click=lambda: MacCodeState.open_menu_dropdown("Edit")),
+                position="relative"
+            ),
+            rx.box(
+                rx.text("View", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px", color="#222", font_weight="bold", 
+                        on_click=lambda: MacCodeState.open_menu_dropdown("View")),
+                position="relative"
+            ),
+            rx.box(
+                rx.text("Tools", font_size="12px", font_family="'Press Start 2P', monospace", cursor="pointer", padding="2px 8px", color="#222", font_weight="bold", 
+                        on_click=lambda: MacCodeState.open_menu_dropdown("Tools")),
+                position="relative"
+            ),
+            spacing="2",
+            position="relative"
         ),
+        dropdown("File", ["New", "Open", "Save", "Close"]),
+        dropdown("Edit", ["Undo", "Redo", "Cut", "Copy", "Paste"]),
+        dropdown("View", ["Zoom In", "Zoom Out", "Actual Size"]),
+        dropdown("Tools", ["Settings", "Customize Toolbar"]),
         rx.spacer(),
         # Time display
         rx.text(
@@ -204,8 +267,11 @@ def mac_menu_bar() -> rx.Component:
         padding="4px 8px",
         bg="white",
         border_bottom="2px solid black",
-        align="center"
+        align="center",
+        # Remove on_click here, overlay now handles closing
+        style={"user-select": "none"}
     )
+    # (removed duplicate block)
 
 def application_windows() -> rx.Component:
     """Render all open application windows"""
@@ -218,8 +284,8 @@ def application_windows() -> rx.Component:
                 calculator_component(),
                 MacCodeState.calculator_x,
                 MacCodeState.calculator_y,
-                width="280px",
-                height="320px",
+                width="400px",
+                height="620px",
                 on_close=MacCodeState.close_calculator
             ),
             rx.box()
@@ -230,16 +296,41 @@ def application_windows() -> rx.Component:
             MacCodeState.notepad_active,
             mac_window(
                 "Notepad",
-                notepad_component(),
+                rx.box(
+                    notepad_component(),
+                    width="500px",
+                    height="320px",
+                    min_height="320px",
+                    bg="white",
+                    color="#111",
+                    font_size="15px",
+                    font_family="'Press Start 2P', monospace",
+                    style={"overflow": "auto"}
+                ),
                 MacCodeState.notepad_x,
                 MacCodeState.notepad_y,
-                width="450px",
+                width="520px",
                 height="350px",
                 on_close=MacCodeState.close_notepad
             ),
             rx.box()
         ),
         
+        # Interface Builder window (now called MacCode)
+        rx.cond(
+            MacCodeState.interface_builder_active,
+            mac_window(
+                "MacCode",
+                interface_builder(),
+                MacCodeState.interface_builder_x,
+                MacCodeState.interface_builder_y,
+                width="900px",
+                height="900px",
+                on_close=MacCodeState.close_interface_builder
+            ),
+            rx.box()
+        ),
+
         # MacDraw window
         rx.cond(
             MacCodeState.draw_active,
@@ -248,14 +339,12 @@ def application_windows() -> rx.Component:
                 mac_draw(),
                 MacCodeState.draw_x,
                 MacCodeState.draw_y,
-                width="500px",
-                height="400px",
+                width="830px",
+                height="500px",
                 on_close=MacCodeState.close_macdraw
             ),
             rx.box()
         ),
-        
-        # Breakout window
         rx.cond(
             MacCodeState.breakout_active,
             mac_window(
@@ -263,7 +352,7 @@ def application_windows() -> rx.Component:
                 breakout_component(),
                 MacCodeState.breakout_x,
                 MacCodeState.breakout_y,
-                width="400px",
+                width="430px",
                 height="450px",
                 on_close=MacCodeState.close_breakout
             ),
@@ -278,8 +367,8 @@ def application_windows() -> rx.Component:
                 interface_builder(),
                 MacCodeState.interface_builder_x,
                 MacCodeState.interface_builder_y,
-                width="800px",
-                height="600px",
+                width="900px",
+                height="900px",
                 on_close=MacCodeState.close_interface_builder
             ),
             rx.box()
@@ -341,10 +430,10 @@ def mac_desktop() -> rx.Component:
             }
         ),
         
-        # MacDraw icon
+        # MacCode (Interface Builder) icon
         rx.button(
-            "🎨\nMacDraw",
-            on_click=MacCodeState.open_macdraw,
+            "�️\nMacCode",
+            on_click=MacCodeState.open_interface_builder,
             position="absolute",
             left="20px",
             top="220px",
@@ -363,8 +452,29 @@ def mac_desktop() -> rx.Component:
                 "&:hover": {"background": "rgba(0,0,0,0.1)"}
             }
         ),
-        
-        # Breakout icon
+
+        # MacDraw icon
+        rx.button(
+            "🎨\nMacDraw",
+            on_click=MacCodeState.open_macdraw,
+            position="absolute",
+            left="20px",
+            top="380px",
+            width="80px",
+            height="60px",
+            bg="#e0e0e0",
+            border="1px solid black",
+            font_size="10px",
+            font_family="'Press Start 2P', monospace",
+            color="black",
+            cursor="pointer",
+            z_index="100",
+            style={
+                "white-space": "pre-line",
+                "text-align": "center",
+                "&:hover": {"background": "rgba(0,0,0,0.1)"}
+            }
+        ),
         rx.button(
             "🎮\nBreakout",
             on_click=MacCodeState.open_breakout,
@@ -387,28 +497,7 @@ def mac_desktop() -> rx.Component:
             }
         ),
         
-        # Interface Builder icon
-        rx.button(
-            "🏗️\nIB",
-            on_click=MacCodeState.open_interface_builder,
-            position="absolute",
-            left="20px",
-            top="380px",
-            width="80px",
-            height="60px",
-            bg="#e0e0e0",
-            border="1px solid black",
-            font_size="10px",
-            font_family="'Press Start 2P', monospace",
-            color="black",
-            cursor="pointer",
-            z_index="100",
-            style={
-                "white-space": "pre-line",
-                "text-align": "center",
-                "&:hover": {"background": "rgba(0,0,0,0.1)"}
-            }
-        ),
+
         
         # Application windows
         application_windows(),

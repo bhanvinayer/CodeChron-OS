@@ -1,285 +1,204 @@
-"""
-Mac Draw - Classic drawing application component
-"""
-
 import reflex as rx
+from typing import List, Tuple
 
+# ------------------------ State ------------------------
 class MacDrawState(rx.State):
-    """State for Mac Draw application"""
-    current_tool: str = "pencil"  # pencil, brush, eraser, line, rectangle, circle
+    current_tool: str = "pencil"
     brush_size: int = 2
-    current_color: str = "#000000"
-    
+    color: str = "#000000"
+    paths: List[List[Tuple[int, int]]] = []
+    current_path: List[Tuple[int, int]] = []
+    is_drawing: bool = False
+
     def set_tool(self, tool: str):
         self.current_tool = tool
-        # Trigger canvas update via JavaScript
-        return rx.call_script(f"window.updateCanvasProps && window.updateCanvasProps('{tool}', '{self.current_color}', {self.brush_size})")
 
     def set_color(self, color: str):
-        self.current_color = color
-        # Trigger canvas update via JavaScript
-        return rx.call_script(f"window.updateCanvasProps && window.updateCanvasProps('{self.current_tool}', '{color}', {self.brush_size})")
+        self.color = color
 
-    def set_brush_size(self, size: int):
+    def set_size(self, size: int):
         self.brush_size = size
-        # Trigger canvas update via JavaScript
-        return rx.call_script(f"window.updateCanvasProps && window.updateCanvasProps('{self.current_tool}', '{self.current_color}', {size})")
-
+    
+    def start_drawing(self, pos):
+        """Start a new drawing path"""
+        self.is_drawing = True
+        self.current_path = [pos]
+    
+    def add_point(self, pos):
+        """Add a point to the current path"""
+        if self.is_drawing:
+            self.current_path.append(pos)
+    
+    def stop_drawing(self):
+        """Finish the current path"""
+        if self.is_drawing and self.current_path:
+            self.paths.append(self.current_path.copy())
+            self.current_path = []
+        self.is_drawing = False
+    
     def clear_canvas(self):
-        """Clear the canvas - this will be handled by JavaScript"""
-        return rx.call_script("window.clearDrawingCanvas && window.clearDrawingCanvas()")
+        """Clear all drawings"""
+        self.paths = []
+        self.current_path = []
+        self.is_drawing = False
 
+# ------------------------ UI Components ------------------------
 def tool_palette() -> rx.Component:
-    """Render the tool palette"""
     return rx.vstack(
-        rx.text("Tools", size="2", weight="bold"),
+        rx.text("Tools", weight="bold", color="#000"),
         rx.hstack(
             rx.button(
-                "✏️",
+                "✏️", 
                 on_click=MacDrawState.set_tool("pencil"),
-                variant=rx.cond(MacDrawState.current_tool == "pencil", "soft", "outline"),
-                size="2"
+                color_scheme=rx.cond(MacDrawState.current_tool == "pencil", "blue", "gray")
             ),
             rx.button(
-                "🖌️",
+                "🖌️", 
                 on_click=MacDrawState.set_tool("brush"),
-                variant=rx.cond(MacDrawState.current_tool == "brush", "soft", "outline"), 
-                size="2"
+                color_scheme=rx.cond(MacDrawState.current_tool == "brush", "blue", "gray")
             ),
             rx.button(
-                "🧽",
+                "🧽", 
                 on_click=MacDrawState.set_tool("eraser"),
-                variant=rx.cond(MacDrawState.current_tool == "eraser", "soft", "outline"), 
-                size="2"
-            ),
-            rx.button(
-                "📏",
-                on_click=MacDrawState.set_tool("line"),
-                variant=rx.cond(MacDrawState.current_tool == "line", "soft", "outline"),
-                size="2"
-            ),
-            rx.button(
-                "⬛",
-                on_click=MacDrawState.set_tool("rectangle"),
-                variant=rx.cond(MacDrawState.current_tool == "rectangle", "soft", "outline"),
-                size="2"
-            ),
-            rx.button(
-                "⭕",
-                on_click=MacDrawState.set_tool("circle"),
-                variant=rx.cond(MacDrawState.current_tool == "circle", "soft", "outline"),
-                size="2"
+                color_scheme=rx.cond(MacDrawState.current_tool == "eraser", "blue", "gray")
             ),
             spacing="2"
         ),
-        spacing="3"
+        rx.button(
+            "🗑️ Clear",
+            on_click=rx.call_script("if(window.clearCanvas) window.clearCanvas()"),
+            color_scheme="red",
+            size="2"
+        ),
+        spacing="2"
     )
 
 def color_palette() -> rx.Component:
-    """Render the color palette"""
-    colors = ["#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FFFFFF"]
-    
+    colors = ["#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FFFFFF"]
     return rx.vstack(
-        rx.text("Colors", size="2", weight="bold"),
+        rx.text("Colors", weight="bold", color="#000"),
         rx.hstack(
             *[
-                rx.button(
-                    width="30px",
-                    height="30px",
+                rx.box(
                     background_color=color,
-                    border=rx.cond(MacDrawState.current_color == color, "2px solid #000", "1px solid #ccc"),
+                    width="25px",
+                    height="25px",
+                    border=rx.cond(
+                        MacDrawState.color == color,
+                        "3px solid #007acc",
+                        "1px solid #ccc"
+                    ),
                     on_click=MacDrawState.set_color(color),
-                    border_radius="4px"
+                    cursor="pointer"
                 ) for color in colors
             ],
             spacing="1"
         ),
-        spacing="3"
+        spacing="2"
     )
 
-def brush_size_controls() -> rx.Component:
-    """Render brush size controls"""
+def size_controls() -> rx.Component:
     return rx.vstack(
-        rx.text("Brush Size", size="2", weight="bold"),
+        rx.text("Size", weight="bold", color="#000"),
         rx.hstack(
-            rx.button("S", on_click=MacDrawState.set_brush_size(1), size="1"),
-            rx.button("M", on_click=MacDrawState.set_brush_size(3), size="1"),
-            rx.button("L", on_click=MacDrawState.set_brush_size(5), size="1"),
+            rx.button(
+                "S", 
+                on_click=MacDrawState.set_size(1),
+                color_scheme=rx.cond(MacDrawState.brush_size == 1, "blue", "gray")
+            ),
+            rx.button(
+                "M", 
+                on_click=MacDrawState.set_size(3),
+                color_scheme=rx.cond(MacDrawState.brush_size == 3, "blue", "gray")
+            ),
+            rx.button(
+                "L", 
+                on_click=MacDrawState.set_size(5),
+                color_scheme=rx.cond(MacDrawState.brush_size == 5, "blue", "gray")
+            ),
             spacing="2"
         ),
-        spacing="3"
+        rx.text(f"Current: {MacDrawState.brush_size}px", font_size="12px", color="gray"),
+        spacing="2"
     )
 
-def drawing_canvas() -> rx.Component:
-    """Render the main drawing canvas using HTML5 Canvas"""
-    return rx.box(
-        rx.html(
-            """
-            <canvas 
-                id="drawingCanvas" 
-                width="600" 
-                height="400" 
-                style="border: 2px solid #000; background: white; cursor: crosshair; display: block;"
-            ></canvas>
-            <div id="status" style="font-size: 12px; color: #666; margin-top: 5px;">
-                Initializing canvas...
-            </div>
+def working_canvas() -> rx.Component:
+    """Working HTML5 canvas with inline JavaScript"""
+    return rx.html(f"""
+        <div>
+            <canvas id="drawCanvas" width="600" height="400" 
+                    style="border: 2px solid #000; background: white; cursor: crosshair; display: block; margin: 0;">
+            </canvas>
             <script>
-                // Global variables
-                let canvas, ctx, status;
-                let isDrawing = false;
-                let currentColor = '#000000';
-                let currentSize = 2;
-                let currentTool = 'pencil';
-                
-                // Wait for DOM to be ready
-                function initCanvas() {
-                    canvas = document.getElementById('drawingCanvas');
-                    status = document.getElementById('status');
-                    
-                    if (!canvas) {
-                        console.log('Canvas not found');
+                (function() {{
+                    const canvas = document.getElementById('drawCanvas');
+                    if (!canvas) {{
+                        setTimeout(arguments.callee, 100);
                         return;
-                    }
+                    }}
                     
-                    ctx = canvas.getContext('2d');
+                    const ctx = canvas.getContext('2d');
+                    let isDrawing = false;
                     
-                    // Set default drawing properties
-                    ctx.strokeStyle = currentColor;
-                    ctx.lineWidth = currentSize;
+                    // Set initial drawing properties
+                    ctx.strokeStyle = '{MacDrawState.color}';
+                    ctx.lineWidth = {MacDrawState.brush_size};
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
-                    
-                    canvas.addEventListener('mousedown', function(e) {
+
+                    function getMousePos(e) {{
+                        const rect = canvas.getBoundingClientRect();
+                        return {{
+                            x: e.clientX - rect.left,
+                            y: e.clientY - rect.top
+                        }};
+                    }}
+
+                    canvas.onmousedown = function(e) {{
                         isDrawing = true;
-                        
-                        // Update context properties before drawing
-                        ctx.strokeStyle = currentColor;
-                        ctx.lineWidth = currentSize;
-                        
+                        const pos = getMousePos(e);
                         ctx.beginPath();
-                        ctx.moveTo(e.offsetX, e.offsetY);
-                        status.textContent = 'Drawing at (' + e.offsetX + ', ' + e.offsetY + ') with ' + currentColor;
-                        console.log('Started drawing at', e.offsetX, e.offsetY, 'color:', currentColor, 'size:', currentSize);
-                    });
-                    
-                    canvas.addEventListener('mousemove', function(e) {
+                        ctx.moveTo(pos.x, pos.y);
+                    }};
+
+                    canvas.onmousemove = function(e) {{
                         if (!isDrawing) return;
-                        ctx.lineTo(e.offsetX, e.offsetY);
+                        const pos = getMousePos(e);
+                        ctx.lineTo(pos.x, pos.y);
                         ctx.stroke();
-                        status.textContent = 'Drawing to (' + e.offsetX + ', ' + e.offsetY + ')';
-                    });
-                    
-                    canvas.addEventListener('mouseup', function() {
+                    }};
+
+                    canvas.onmouseup = function() {{
                         isDrawing = false;
-                        status.textContent = 'Ready to draw - Current: ' + currentTool + ', ' + currentColor + ', ' + currentSize + 'px';
-                    });
-                    
-                    canvas.addEventListener('mouseleave', function() {
+                    }};
+
+                    canvas.onmouseleave = function() {{
                         isDrawing = false;
-                        status.textContent = 'Ready to draw - Current: ' + currentTool + ', ' + currentColor + ', ' + currentSize + 'px';
-                    });
+                    }};
                     
-                    status.textContent = 'Canvas ready! Click and drag to draw';
-                    console.log('Canvas initialized successfully');
-                }
-                
-                // Global functions for external control
-                window.updateCanvasProps = function(tool, color, size) {
-                    currentTool = tool;
-                    currentColor = color;
-                    currentSize = size;
-                    console.log('Updated canvas props:', tool, color, size);
-                    if (status) {
-                        status.textContent = 'Updated: ' + tool + ', ' + color + ', ' + size + 'px';
-                    }
-                };
-                
-                window.clearDrawingCanvas = function() {
-                    if (canvas && ctx) {
+                    // Clear function accessible globally
+                    window.clearCanvas = function() {{
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        if (status) status.textContent = 'Canvas cleared - Ready to draw';
-                    }
-                };
-                
-                // Initialize canvas when DOM is ready
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initCanvas);
-                } else {
-                    initCanvas();
-                }
-                
-                // Also try with a small delay as backup
-                setTimeout(initCanvas, 100);
+                    }};
+                }})();
             </script>
-            """
-        ),
-        padding="4"
-    )
+        </div>
+    """)
 
 def mac_draw() -> rx.Component:
-    """Main Mac Draw component"""
+    """MacDraw 1984 - Classic Mac drawing application"""
     return rx.vstack(
+        rx.heading("🖥️ MacDraw 1984", size="6", color="#000"),
         rx.hstack(
-            rx.text("🎨 Mac Draw", size="6", weight="bold"),
-            rx.spacer(),
-            # Current tool info
-            rx.hstack(
-                rx.text(f"Tool: {MacDrawState.current_tool.title()}", size="2"),
-                rx.box(
-                    width="20px",
-                    height="20px", 
-                    background_color=MacDrawState.current_color,
-                    border="1px solid #000",
-                    border_radius="4px"
-                ),
-                rx.text(f"Size: {MacDrawState.brush_size}px", size="2"),
-                spacing="3",
-                align="center"
-            ),
-            rx.html(
-                """
-                <button 
-                    onclick="window.clearDrawingCanvas && window.clearDrawingCanvas()"
-                    style="
-                        background: #ff4757; 
-                        color: white; 
-                        border: 1px solid #ff4757; 
-                        border-radius: 4px; 
-                        padding: 8px 16px; 
-                        cursor: pointer;
-                        font-size: 14px;
-                    "
-                    onmouseover="this.style.background='#ff3838'"
-                    onmouseout="this.style.background='#ff4757'"
-                >
-                    Clear
-                </button>
-                """
-            ),
-            width="100%",
-            align="center"
-        ),
-        
-        rx.hstack(
-            # Left sidebar with tools
             rx.vstack(
-                tool_palette(),
-                color_palette(),
-                brush_size_controls(),
-                width="200px",
+                tool_palette(), 
+                color_palette(), 
+                size_controls(), 
                 spacing="4"
             ),
-            
-            # Main canvas area
-            drawing_canvas(),
-            
-            spacing="4",
-            width="100%"
+            working_canvas(),
+            spacing="5"
         ),
-        
         spacing="4",
-        width="100%",
-        height="100vh",
         padding="4"
     )

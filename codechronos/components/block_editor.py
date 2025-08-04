@@ -126,7 +126,7 @@ class BlockEditorState(rx.State):
 def block_palette() -> rx.Component:
     """Palette of available blocks"""
     return rx.vstack(
-        rx.text("Logic Blocks", size="3", weight="bold", color="blue"),
+        rx.text("Logic Blocks", size="3", weight="bold", color="white"),
         rx.vstack(
             rx.button(
                 "Constant", 
@@ -209,7 +209,7 @@ def block_palette() -> rx.Component:
         
         spacing="2",
         padding="1rem",
-        bg=rx.color("gray", 1),
+        bg="#2D3748",  # Dark background
         border_radius="8px",
         align="start"
     )
@@ -347,7 +347,7 @@ def block_canvas() -> rx.Component:
     """Canvas area for arranging blocks"""
     return rx.box(
         rx.vstack(
-            rx.text("Block Canvas", size="4", weight="bold"),
+            rx.text("Block Canvas", size="4", weight="bold", color="white"),
             rx.box(
                 rx.foreach(
                     BlockEditorState.canvas_blocks,
@@ -355,8 +355,8 @@ def block_canvas() -> rx.Component:
                 ),
                 min_height="300px",
                 width="100%",
-                bg=rx.color("gray", 2),
-                border="2px dashed #ccc",
+                bg="#1A202C",  # Dark canvas background
+                border="2px dashed #4A5568",  # Dark border
                 border_radius="8px",
                 padding="1rem"
             ),
@@ -369,7 +369,7 @@ def code_preview() -> rx.Component:
     """Preview generated Python code"""
     return rx.vstack(
         rx.hstack(
-            rx.text("Generated Code", size="4", weight="bold"),
+            rx.text("Generated Code", size="4", weight="bold", color="white"),
             rx.button(
                 "Generate",
                 on_click=BlockEditorState.generate_code,

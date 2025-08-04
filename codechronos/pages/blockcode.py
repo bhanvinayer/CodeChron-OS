@@ -9,17 +9,11 @@ from ..components.block_editor import block_editor_component
 class BlockCodeState(rx.State):
     """State for BlockCode 2015 interface"""
     current_project: str = "My Awesome App"
-    saved_projects: List[str] = ["Calculator", "Todo List", "Drawing App"]
     show_tutorial: bool = True
     
     def new_project(self):
         """Create a new project"""
         self.current_project = "Untitled Project"
-    
-    def save_project(self):
-        """Save current project"""
-        if self.current_project not in self.saved_projects:
-            self.saved_projects.append(self.current_project)
     
     def hide_tutorial(self):
         """Hide the tutorial overlay"""
@@ -50,12 +44,6 @@ def project_header() -> rx.Component:
                 "New",
                 on_click=BlockCodeState.new_project,
                 color_scheme="blue",
-                variant="outline"
-            ),
-            rx.button(
-                "Save",
-                on_click=BlockCodeState.save_project,
-                color_scheme="green",
                 variant="outline"
             ),
             rx.button(
@@ -125,32 +113,9 @@ def tutorial_overlay() -> rx.Component:
     )
 
 def side_panel() -> rx.Component:
-    """Side panel with saved projects and tips"""
+    """Side panel with tips"""
     return rx.vstack(
-        rx.text("Saved Projects", font_size="16px", font_weight="bold", color="#374151"),
-        rx.vstack(
-            rx.foreach(
-                BlockCodeState.saved_projects.to(List[str]),
-                lambda project: rx.hstack(
-                    rx.text("📁", font_size="16px"),
-                    rx.text(project, font_size="14px"),
-                    rx.spacer(),
-                    rx.button("Load", size="1", variant="ghost"),
-                    width="100%",
-                    padding="0.5rem",
-                    border_radius="6px",
-                    style={
-                        "&:hover": {
-                            "background": "#f3f4f6"
-                        }
-                    }
-                )
-            ),
-            width="100%",
-            spacing="1"
-        ),
-        
-        rx.text("Quick Tips", font_size="16px", font_weight="bold", color="#374151", margin_top="2rem"),
+        rx.text("Quick Tips", font_size="16px", font_weight="bold", color="#374151"),
         rx.vstack(
             rx.text("💡 Drag blocks to the canvas", font_size="12px", color="#6b7280"),
             rx.text("🔗 Snap blocks together", font_size="12px", color="#6b7280"),
@@ -176,7 +141,7 @@ def main_editor_area() -> rx.Component:
         width="100%",
         height="100%",
         padding="2rem",
-        bg="linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%)"
+        bg="#1A202C"  # Dark background
     )
 
 def blockcode_page() -> rx.Component:

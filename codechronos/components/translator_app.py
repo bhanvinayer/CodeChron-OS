@@ -212,21 +212,36 @@ class TranslatorState(rx.State):
 def language_selector(current_lang: str, on_change, label: str) -> rx.Component:
     """Language selector component"""
     return rx.vstack(
-        rx.text(label, font_weight="bold", color="#1976D2"),
+        rx.text(
+            label, 
+            font_weight="600", 
+            color="#1F2937",
+            font_size="1.1rem",
+            margin_bottom="0.5rem"
+        ),
         rx.select(
             TranslatorState.language_keys,
             value=current_lang,
             placeholder="Select language",
             on_change=on_change,
-            size="3"
+            size="3",
+            width="100%",
+            min_height="3rem",
+            font_size="1rem",
+            border_radius="12px",
+            border="2px solid #BFDBFE",
+            _hover={"border_color": "#2563EB"},
+            _focus={"border_color": "#2563EB", "box_shadow": "0 0 0 3px rgba(37, 99, 235, 0.1)"}
         ),
         rx.text(
             TranslatorState.languages.get(current_lang, ""),
-            font_size="0.9rem",
-            color="#666"
+            font_size="1rem",
+            color="#1F2937",
+            font_weight="500"
         ),
         align="center",
-        spacing="2"
+        spacing="3",
+        width="100%"
     )
 
 def translation_history_item(item: Dict[str, str]) -> rx.Component:
@@ -234,202 +249,375 @@ def translation_history_item(item: Dict[str, str]) -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.hstack(
-                rx.text(item["from_lang"], font_size="0.8rem", color="#666"),
-                rx.text("→", color="#999"),
-                rx.text(item["to_lang"], font_size="0.8rem", color="#666"),
-                spacing="2"
+                rx.text(
+                    item["from_lang"], 
+                    font_size="1rem", 
+                    color="#059669",
+                    font_weight="500"
+                ),
+                rx.text(
+                    "→", 
+                    color="#2563EB",
+                    font_size="1.2rem",
+                    font_weight="600"
+                ),
+                rx.text(
+                    item["to_lang"], 
+                    font_size="1rem", 
+                    color="#DC2626",
+                    font_weight="500"
+                ),
+                spacing="3",
+                align="center"
             ),
-            rx.hstack(
-                rx.text(item["input"], font_weight="bold"),
-                rx.text("→", color="#1976D2"),
-                rx.text(item["output"], color="#1976D2"),
-                spacing="3"
+            rx.divider(color="#BFDBFE", margin="0.5rem 0"),
+            rx.vstack(
+                rx.hstack(
+                    rx.text(
+                        "Original:",
+                        font_size="0.95rem",
+                        color="#059669",
+                        font_weight="600"
+                    ),
+                    rx.text(
+                        item["input"], 
+                        font_weight="500",
+                        font_size="1.1rem",
+                        color="#1F2937"
+                    ),
+                    spacing="2",
+                    align="center"
+                ),
+                rx.hstack(
+                    rx.text(
+                        "Translation:",
+                        font_size="0.95rem",
+                        color="#DC2626",
+                        font_weight="600"
+                    ),
+                    rx.text(
+                        item["output"], 
+                        color="#2563EB",
+                        font_weight="600",
+                        font_size="1.1rem"
+                    ),
+                    spacing="2",
+                    align="center"
+                ),
+                spacing="2",
+                align="start",
+                width="100%"
             ),
             align="start",
-            spacing="1"
+            spacing="3",
+            width="100%"
         ),
         bg="white",
-        border="1px solid #e0e0e0",
-        border_radius="8px",
-        padding="1rem",
-        margin_bottom="0.5rem",
-        _hover={"box_shadow": "0 2px 4px rgba(0,0,0,0.1)"}
+        border="2px solid #DBEAFE",
+        border_radius="16px",
+        padding="1.5rem",
+        margin_bottom="1rem",
+        box_shadow="0 4px 6px rgba(37, 99, 235, 0.1)",
+        _hover={
+            "box_shadow": "0 8px 25px rgba(37, 99, 235, 0.2)",
+            "border_color": "#BFDBFE",
+            "transform": "translateY(-2px)"
+        },
+        transition="all 0.2s ease-in-out",
+        width="100%"
     )
 
 def translator_app() -> rx.Component:
     """Translator application"""
-    return rx.vstack(
-        # Header
-        rx.text(
-            "🌐 Universal Translator",
-            font_size="2.5rem",
-            font_weight="bold",
-            color="#1976D2",
-            text_align="center",
-            margin_bottom="2rem"
-        ),
-        
-        # Main translation interface
-        rx.box(
-            rx.vstack(
-                # Language selectors
-                rx.hstack(
-                    language_selector(
-                        TranslatorState.source_language,
-                        TranslatorState.set_source_language,
-                        "From"
-                    ),
-                    rx.button(
-                        "⇄",
-                        on_click=TranslatorState.swap_languages,
-                        variant="outline",
-                        size="3",
-                        color_scheme="blue",
-                        font_size="1.5rem",
-                        align_self="center",
-                        margin_top="2rem"
-                    ),
-                    language_selector(
-                        TranslatorState.target_language,
-                        TranslatorState.set_target_language,
-                        "To"
-                    ),
-                    justify="between",
-                    width="100%",
-                    margin_bottom="2rem"
-                ),
-                
-                # Text input and output
-                rx.hstack(
-                    # Input side
-                    rx.vstack(
-                        rx.text("Enter text to translate:", font_weight="bold"),
-                        rx.text_area(
-                            placeholder="Type your text here...",
-                            value=TranslatorState.input_text,
-                            on_change=TranslatorState.set_input_text,
-                            height="150px",
-                            resize="none"
-                        ),
-                        width="45%"
-                    ),
-                    
-                    # Translation arrow
-                    rx.center(
-                        rx.text("→", font_size="2rem", color="#1976D2"),
-                        width="10%"
-                    ),
-                    
-                    # Output side
-                    rx.vstack(
-                        rx.text("Translation:", font_weight="bold"),
-                        rx.text_area(
-                            value=TranslatorState.translated_text,
-                            height="150px",
-                            is_read_only=True,
-                            bg="#f8f9fa",
-                            placeholder="Translation will appear here..."
-                        ),
-                        width="45%"
-                    ),
-                    
-                    width="100%",
-                    margin_bottom="2rem"
-                ),
-                
-                # Action buttons
-                rx.hstack(
-                    rx.button(
-                        "Translate",
-                        on_click=TranslatorState.translate_text,
-                        loading=TranslatorState.is_translating,
-                        color_scheme="blue",
-                        size="3"
-                    ),
-                    rx.button(
-                        "Clear",
-                        on_click=TranslatorState.clear_translation,
-                        variant="outline",
-                        size="3"
-                    ),
-                    spacing="4",
-                    justify="center",
-                    margin_bottom="2rem"
-                ),
-                
-                # Demo notice
-                rx.box(
-                    rx.hstack(
-                        rx.text("ℹ️", font_size="1.2rem"),
-                        rx.vstack(
-                            rx.text("AI Translation", font_weight="bold", color="#1976D2"),
-                            rx.text(
-                                "Uses OpenAI API when available (set OPENAI_API_KEY environment variable). Falls back to demo mode with limited vocabulary: hello, goodbye, thank you, water, house, friend, etc.",
-                                font_size="0.9rem",
-                                color="#666"
-                            ),
-                            align="start"
-                        ),
-                        align="start",
-                        spacing="3"
-                    ),
-                    bg="#E3F2FD",
-                    border="1px solid #BBDEFB",
-                    border_radius="8px",
-                    padding="1rem",
-                    margin_bottom="2rem"
-                ),
-                
-                width="100%"
-            ),
-            bg="white",
-            border_radius="12px",
-            padding="2rem",
-            box_shadow="0 4px 6px rgba(0,0,0,0.1)",
-            margin_bottom="2rem"
-        ),
-        
-        # Translation History
-        rx.cond(
-            TranslatorState.translation_history.length() > 0,
-            rx.box(
-                rx.hstack(
-                    rx.text(
-                        "📜 Translation History",
-                        font_size="1.5rem",
-                        font_weight="bold",
-                        color="#1976D2"
-                    ),
-                    rx.spacer(),
-                    rx.button(
-                        "Clear History",
-                        on_click=TranslatorState.clear_history,
-                        variant="outline",
-                        color_scheme="red",
-                        size="1"
-                    ),
-                    width="100%",
-                    margin_bottom="1rem"
-                ),
+    return rx.container(
+        rx.vstack(
+            # Header
+            rx.center(
                 rx.vstack(
-                    rx.foreach(
-                        TranslatorState.translation_history,
-                        translation_history_item
+                    rx.text(
+                        "🌐",
+                        font_size="4rem",
+                        margin_bottom="0.5rem"
                     ),
-                    width="100%"
+                    rx.text(
+                        "Universal Translator",
+                        font_size="3.5rem",
+                        font_weight="700",
+                        color="#BFC6D0",
+                        text_align="center",
+                        letter_spacing="-0.025em"
+                    ),
+                    rx.text(
+                        "Translate text between multiple languages with AI precision",
+                        font_size="1.3rem",
+                        color="#7C3AED",
+                        text_align="center",
+                        font_weight="400"
+                    ),
+                    align="center",
+                    spacing="4"
+                ),
+                width="100%",
+                margin_bottom="3rem"
+            ),
+            
+            # Main translation interface
+            rx.box(
+                rx.vstack(
+                    # Language selectors
+                    rx.hstack(
+                        language_selector(
+                            TranslatorState.source_language,
+                            TranslatorState.set_source_language,
+                            "Translate From"
+                        ),
+                        rx.center(
+                            rx.button(
+                                "⇄",
+                                on_click=TranslatorState.swap_languages,
+                                variant="outline",
+                                size="4",
+                                color_scheme="blue",
+                                font_size="2rem",
+                                height="4rem",
+                                width="4rem",
+                                border_radius="50%",
+                                border="2px solid #BFDBFE",
+                                _hover={
+                                    "border_color": "#2563EB",
+                                    "bg": "#EFF6FF",
+                                    "transform": "rotate(180deg)"
+                                },
+                                transition="all 0.3s ease"
+                            ),
+                            width="auto"
+                        ),
+                        language_selector(
+                            TranslatorState.target_language,
+                            TranslatorState.set_target_language,
+                            "Translate To"
+                        ),
+                        justify="between",
+                        align="center",
+                        width="100%",
+                        margin_bottom="3rem",
+                        spacing="6"
+                    ),
+                    
+                    # Text input and output
+                    rx.hstack(
+                        # Input side
+                        rx.vstack(
+                            rx.text(
+                                "Enter text to translate:", 
+                                font_weight="600",
+                                font_size="1.2rem",
+                                color="#1F2937",
+                                margin_bottom="0.75rem"
+                            ),
+                            rx.text_area(
+                                placeholder="Type your text here...",
+                                value=TranslatorState.input_text,
+                                on_change=TranslatorState.set_input_text,
+                                bg="#EFF6EE",
+                                height="180px",
+                                resize="none",
+                                font_size="1.8rem",
+                                border_radius="16px",
+                                border="2px solid #BFDBFE",
+                                padding="1.25rem",
+                                color="#000000",
+                                _hover={"border_color": "#059669"},
+                                _focus={
+                                    "border_color": "#059669", 
+                                    "box_shadow": "0 0 0 3px rgba(5, 150, 105, 0.1)"
+                                },
+                                line_height="1.6"
+                            ),
+                            width="48%",
+                            align="center"
+                        ),
+                        
+                        # Translation arrow
+                        rx.center(
+                            rx.text(
+                                "→", 
+                                font_size="3rem", 
+                                color="#2563EB",
+                                font_weight="300"
+                            ),
+                            width="4%"
+                        ),
+                        
+                        # Output side
+                        rx.vstack(
+                            rx.text(
+                                "Translation:", 
+                                font_weight="600",
+                                font_size="1.2rem",
+                                color="#1F2937",
+                                margin_bottom="0.75rem"
+                            ),
+                            rx.text_area(
+                                value=TranslatorState.translated_text,
+                                height="180px",
+                                is_read_only=True,
+                                bg="#FEF3F2",
+                                placeholder="Translation will appear here...",
+                                font_size="1.8rem",
+                                border_radius="16px",
+                                border="2px solid #FECACA",
+                                padding="1.25rem",
+                                line_height="1.6",
+                                color="#000000"
+                            ),
+                            width="48%",
+                            align="center"
+                        ),
+                        
+                        width="100%",
+                        margin_bottom="3rem",
+                        justify="between",
+                        align="start"
+                    ),
+                    
+                    # Action buttons
+                    rx.center(
+                        rx.hstack(
+                            rx.button(
+                                rx.cond(
+                                    TranslatorState.is_translating,
+                                    rx.hstack(
+                                        rx.spinner(size="1"),
+                                        rx.text("Translating...", font_size="1.1rem", font_weight="500"),
+                                        spacing="2"
+                                    ),
+                                    rx.text("Translate", font_size="1.1rem", font_weight="600")
+                                ),
+                                on_click=TranslatorState.translate_text,
+                                color_scheme="blue",
+                                size="4",
+                                height="3.5rem",
+                                padding="0 2rem",
+                                border_radius="12px",
+                                box_shadow="0 4px 6px rgba(37, 99, 235, 0.2)",
+                                _hover={"box_shadow": "0 6px 20px rgba(37, 99, 235, 0.3)"}
+                            ),
+                            rx.button(
+                                "Clear All",
+                                on_click=TranslatorState.clear_translation,
+                                variant="outline",
+                                size="4",
+                                height="3.5rem",
+                                padding="0 2rem",
+                                border_radius="12px",
+                                font_size="1.1rem",
+                                font_weight="500",
+                                border="2px solid #BFDBFE",
+                                _hover={"border_color": "#DC2626", "color": "#DC2626"}
+                            ),
+                            spacing="4"
+                        ),
+                        width="100%",
+                        margin_bottom="3rem"
+                    ),
+                    
+                    # Demo notice
+                    rx.box(
+                        rx.hstack(
+                            rx.text("ℹ️", font_size="1.5rem"),
+                            rx.vstack(
+                                rx.text(
+                                    "AI-Powered Translation", 
+                                    font_weight="700", 
+                                    color="#2563EB",
+                                    font_size="1.2rem"
+                                ),
+                                rx.text(
+                                    "Uses OpenAI API when available (set OPENAI_API_KEY environment variable). Falls back to demo mode with common words: hello, goodbye, thank you, water, house, friend, and more.",
+                                    font_size="1rem",
+                                    color="#4B5563",
+                                    line_height="1.5"
+                                ),
+                                align="start",
+                                spacing="2"
+                            ),
+                            align="start",
+                            spacing="4"
+                        ),
+                        bg="linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)",
+                        border="2px solid #BFDBFE",
+                        border_radius="16px",
+                        padding="1.5rem",
+                        margin_bottom="3rem"
+                    ),
+                    
+                    width="100%",
+                    spacing="0"
                 ),
                 bg="white",
-                border_radius="12px",
-                padding="2rem",
-                box_shadow="0 4px 6px rgba(0,0,0,0.1)"
+                border_radius="24px",
+                padding="3rem",
+                box_shadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                margin_bottom="3rem",
+                border="1px solid #F3F4F6"
             ),
-            rx.box()
+            
+            # Translation History
+            rx.cond(
+                TranslatorState.translation_history.length() > 0,
+                rx.box(
+                    rx.hstack(
+                        rx.hstack(
+                            rx.text("📜", font_size="2rem"),
+                            rx.text(
+                                "Translation History",
+                                font_size="2rem",
+                                font_weight="700",
+                                color="#1F2937"
+                            ),
+                            spacing="3",
+                            align="center"
+                        ),
+                        rx.spacer(),
+                        rx.button(
+                            "Clear History",
+                            on_click=TranslatorState.clear_history,
+                            variant="outline",
+                            color_scheme="red",
+                            size="3",
+                            font_size="1rem",
+                            font_weight="500",
+                            border_radius="10px",
+                            padding="0.75rem 1.5rem"
+                        ),
+                        width="100%",
+                        margin_bottom="2rem",
+                        align="center"
+                    ),
+                    rx.vstack(
+                        rx.foreach(
+                            TranslatorState.translation_history,
+                            translation_history_item
+                        ),
+                        width="100%",
+                        spacing="0"
+                    ),
+                    bg="white",
+                    border_radius="24px",
+                    padding="3rem",
+                    box_shadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                    border="1px solid #F3F4F6"
+                ),
+                rx.box()
+            ),
+            
+            width="100%",
+            spacing="0"
         ),
-        
-        width="100%",
-        max_width="1000px",
+        max_width="1200px",
         margin="0 auto",
-        padding="2rem",
-        bg="linear-gradient(135deg, #F0F4F8 0%, #E8F5E8 100%)",
+        padding="3rem 2rem",
+        bg="linear-gradient(135deg, #1F2937 0%, #374151 50%, #4B5563 100%)",
         min_height="100vh"
     )

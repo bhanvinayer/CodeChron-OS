@@ -162,97 +162,103 @@ def calculator_button(label: str, on_click, btn_type: str = "num") -> rx.Compone
 def calculator_component() -> rx.Component:
     """Modern calculator layout and style"""
     return rx.center(
-        rx.vstack(
-            # Display
-            rx.box(
-                rx.text(
-                    CalculatorState.display,
-                    size="7",
-                    weight="bold",
-                    text_align="right",
-                    font_family="'VT323', monospace",
-                    color="#111"
-                ),
-                width="100%",
-                height="80px",
-                padding="1.2rem",
-                bg="#fff",
-                border="2.5px solid #111",
-                border_radius="12px",
-                margin_bottom="1.2rem",
-                box_shadow="0 2px 10px rgba(0,0,0,0.07)",
-                display="flex",
-                align_items="center",
-                justify_content="flex-end"
-            ),
-            # Button grid
+        rx.center(
             rx.vstack(
-                # Row 1
-            rx.hstack(
-                calculator_button("C", CalculatorState.clear, "func"),
-                calculator_button("±", CalculatorState.toggle_sign, "func"),
-                calculator_button("%", CalculatorState.calculate_percentage, "func"),
-                calculator_button("÷", lambda: CalculatorState.perform_operation("÷"), "op"),
-                spacing="2"
-            ),
-                # Row 2
-            rx.hstack(
-                calculator_button("7", lambda: CalculatorState.input_digit("7"), "num"),
-                calculator_button("8", lambda: CalculatorState.input_digit("8"), "num"),
-                calculator_button("9", lambda: CalculatorState.input_digit("9"), "num"),
-                calculator_button("×", lambda: CalculatorState.perform_operation("×"), "op"),
-                spacing="2"
-            ),
-                # Row 3
-            rx.hstack(
-                calculator_button("4", lambda: CalculatorState.input_digit("4"), "num"),
-                calculator_button("5", lambda: CalculatorState.input_digit("5"), "num"),
-                calculator_button("6", lambda: CalculatorState.input_digit("6"), "num"),
-                calculator_button("-", lambda: CalculatorState.perform_operation("-"), "op"),
-                spacing="2"
-            ),
-                # Row 4
-            rx.hstack(
-                calculator_button("1", lambda: CalculatorState.input_digit("1"), "num"),
-                calculator_button("2", lambda: CalculatorState.input_digit("2"), "num"),
-                calculator_button("3", lambda: CalculatorState.input_digit("3"), "num"),
-                calculator_button("+", lambda: CalculatorState.perform_operation("+"), "op"),
-                spacing="2"
-            ),
-                # Row 5
-            rx.hstack(
-                rx.button(
-                    "0",
-                    on_click=lambda: CalculatorState.input_digit("0"),
-                    width="128px",  # Double width
-                    height="60px",
-                    font_size="1.5rem",
-                    font_family="'Press Start 2P', monospace",
+                # Display
+                rx.box(
+                    rx.text(
+                        CalculatorState.display,
+                        size="7",
+                        weight="bold",
+                        text_align="right",
+                        font_family="'VT323', monospace",
+                        color="#111"
+                    ),
+                    width="100%",
+                    height="80px",
+                    padding="1.2rem",
                     bg="#fff",
-                    color="#111",
-                    border="1.5px solid #222",
-                    box_shadow="0 2px 6px rgba(0,0,0,0.07)",
-                    _hover={"bg": "#e6e6e6"},
-                    transition="all 0.15s"
+                    border="2.5px solid #111",
+                    border_radius="12px",
+                    margin_bottom="1.2rem",
+                    box_shadow="0 2px 10px rgba(0,0,0,0.07)",
+                    display="flex",
+                    align_items="center",
+                    justify_content="flex-end"
                 ),
-                calculator_button(".", CalculatorState.input_decimal, "num"),
-                calculator_button("=", CalculatorState.equals, "op"),
+                # Button grid
+                rx.vstack(
+                    # Row 1
+                rx.hstack(
+                    calculator_button("C", CalculatorState.clear, "func"),
+                    calculator_button("±", CalculatorState.toggle_sign, "func"),
+                    calculator_button("%", CalculatorState.calculate_percentage, "func"),
+                    calculator_button("÷", lambda: CalculatorState.perform_operation("÷"), "op"),
+                    spacing="2"
+                ),
+                    # Row 2
+                rx.hstack(
+                    calculator_button("7", lambda: CalculatorState.input_digit("7"), "num"),
+                    calculator_button("8", lambda: CalculatorState.input_digit("8"), "num"),
+                    calculator_button("9", lambda: CalculatorState.input_digit("9"), "num"),
+                    calculator_button("×", lambda: CalculatorState.perform_operation("×"), "op"),
+                    spacing="2"
+                ),
+                    # Row 3
+                rx.hstack(
+                    calculator_button("4", lambda: CalculatorState.input_digit("4"), "num"),
+                    calculator_button("5", lambda: CalculatorState.input_digit("5"), "num"),
+                    calculator_button("6", lambda: CalculatorState.input_digit("6"), "num"),
+                    calculator_button("-", lambda: CalculatorState.perform_operation("-"), "op"),
+                    spacing="2"
+                ),
+                    # Row 4
+                rx.hstack(
+                    calculator_button("1", lambda: CalculatorState.input_digit("1"), "num"),
+                    calculator_button("2", lambda: CalculatorState.input_digit("2"), "num"),
+                    calculator_button("3", lambda: CalculatorState.input_digit("3"), "num"),
+                    calculator_button("+", lambda: CalculatorState.perform_operation("+"), "op"),
+                    spacing="2"
+                ),
+                    # Row 5
+                rx.hstack(
+                    rx.button(
+                        "0",
+                        on_click=lambda: CalculatorState.input_digit("0"),
+                        width="128px",  # Double width
+                        height="60px",
+                        font_size="1.5rem",
+                        font_family="'Press Start 2P', monospace",
+                        bg="#fff",
+                        color="#111",
+                        border="1.5px solid #222",
+                        box_shadow="0 2px 6px rgba(0,0,0,0.07)",
+                        _hover={"bg": "#e6e6e6"},
+                        transition="all 0.15s"
+                    ),
+                    calculator_button(".", CalculatorState.input_decimal, "num"),
+                    calculator_button("=", CalculatorState.equals, "op"),
+                    spacing="2"
+                ),
                 spacing="2"
+                ),
+                spacing="2",
+                bg="#f8f9fa",
+                border="2px solid #111",
+                border_radius="18px",
+                padding="1.5rem 1.2rem 1.2rem 1.2rem",
+                box_shadow="0 4px 18px rgba(0,0,0,0.09)"
             ),
-            spacing="2"
-            ),
-            spacing="2",
-            bg="#f8f9fa",
-            border="2px solid #111",
-            border_radius="18px",
-            padding="1.5rem 1.2rem 1.2rem 1.2rem",
-            box_shadow="0 4px 18px rgba(0,0,0,0.09)"
+            bg="#f4f5f7",
+            padding="2.5rem",
+            border_radius="24px",
+            border="2.5px solid #111",
+            box_shadow="0 8px 32px rgba(0,0,0,0.10)",
+            min_width="340px",
+            max_width="380px",
         ),
-        bg="#f4f5f7",
-        padding="2.5rem",
-        border_radius="24px",
-        border="2.5px solid #111",
-        box_shadow="0 8px 32px rgba(0,0,0,0.10)",
-        min_width="340px",
-        max_width="380px"
+        width="100vw",
+        height="100vh",
+        align="center",
+        justify="center"
     )

@@ -75,7 +75,7 @@ def notepad_status_bar() -> rx.Component:
         rx.text(
             f"Font: {NotepadState.font_size}px",
             size="1", 
-            color=rx.color("gray", 10)
+            color=rx.color("black", 12)
         ),
         width="100%",
         padding="0.5rem",
@@ -92,15 +92,19 @@ def notepad_component() -> rx.Component:
             on_change=NotepadState.update_content,
             placeholder="Start typing...",
             width="100%",
-            height="300px",
+            height="420px",
             font_family="'VT323', monospace",
             font_size=f"{NotepadState.font_size}px",
+            color="#111",
             resize="none",
             style={
                 "background": "white",
                 "border": "1px solid #ccc",
-                "padding": "1rem"
-            }
+                "padding": "1rem",
+                "color": "#111",
+                "caretColor": "#111"
+            },
+            _placeholder={"color": "#111"}
         ),
         notepad_status_bar(),
         spacing="0",

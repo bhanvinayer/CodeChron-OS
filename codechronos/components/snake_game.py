@@ -326,7 +326,7 @@ def control_button(label, on_click):
         width="3em",
         height="3em",
         size="3",
-        bg="#fff",
+        bg="#79A4C3",  # changed from #fff to a darker gray
         box_shadow="md",
         _hover={"bg": colors["highlight"]},
     )
@@ -394,7 +394,7 @@ def snake_game():
         # Sticky top navigation
         rx.box(
             rx.hstack(
-                rx.link("← Back to Playground", href="/playground", font_size="1em", color=colors["link"], _hover={"text_decoration": "underline"}),
+                
                 rx.spacer(),
                 rx.tooltip(
                     rx.icon_button(rx.icon("settings"), on_click=rx.noop, color_scheme="gray", size="2"),
