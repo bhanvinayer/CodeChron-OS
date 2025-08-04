@@ -41,7 +41,7 @@ class MacCodeState(rx.State):
     breakout_y: int = 200
     
     interface_builder_active: bool = False
-    interface_builder_x: int = 100
+    interface_builder_x: int = 200
     interface_builder_y: int = 60
     
     # Desktop state
@@ -223,8 +223,13 @@ def mac_menu_bar() -> rx.Component:
     return rx.box(
         rx.hstack(
             rx.box(
-                rx.text("🍎", font_size="14px"),
-                bg="black",
+                rx.image(
+                    src="/images/apple.png",
+                    width="16px",
+                    height="16px",
+                    alt="Apple"
+                ),
+                
                 color="white",
                 padding="2px 6px",
                 cursor="pointer"
@@ -386,113 +391,168 @@ def mac_desktop() -> rx.Component:
         # Desktop icons as simple buttons (like the working test button)
         # Calculator icon
         rx.button(
-            "🔢\nCalculator",
+            rx.vstack(
+                rx.image(
+                    src="/images/calculator_icon.png",
+                    width="40px",
+                    height="40px",
+                    alt="Calculator"
+                ),
+                rx.text(
+                    "Calculator",
+                    font_size="12px",
+                    font_family="'Press Start 2P', monospace",
+                    color="black",
+                    text_align="center"
+                ),
+                spacing="2",
+                align="center"
+            ),
             on_click=MacCodeState.open_calculator,
             position="absolute",
             left="20px",
             top="60px",
-            width="80px",
-            height="60px",
+            width="100px",
+            height="80px",
             bg="#e0e0e0",
             border="1px solid black",
-            font_size="10px",
-            font_family="'Press Start 2P', monospace",
-            color="black",
             cursor="pointer",
             z_index="100",
             style={
-                "white-space": "pre-line",
-                "text-align": "center",
                 "&:hover": {"background": "rgba(0,0,0,0.1)"}
             }
         ),
         
         # Notepad icon
         rx.button(
-            "📝\nNotepad",
+            rx.vstack(
+                rx.image(
+                    src="/images/notepad_icon.png",
+                    width="40px",
+                    height="40px",
+                    alt="Notepad"
+                ),
+                rx.text(
+                    "Notepad",
+                    font_size="12px",
+                    font_family="'Press Start 2P', monospace",
+                    color="black",
+                    text_align="center"
+                ),
+                spacing="2",
+                align="center"
+            ),
             on_click=MacCodeState.open_notepad,
             position="absolute",
             left="20px",
-            top="140px",
-            width="80px",
-            height="60px",
+            top="160px",
+            width="100px",
+            height="80px",
             bg="#e0e0e0",
             border="1px solid black",
-            font_size="10px",
-            font_family="'Press Start 2P', monospace",
-            color="black",
             cursor="pointer",
             z_index="100",
             style={
-                "white-space": "pre-line",
-                "text-align": "center",
                 "&:hover": {"background": "rgba(0,0,0,0.1)"}
             }
         ),
         
         # MacCode (Interface Builder) icon
         rx.button(
-            "�️\nMacCode",
+            rx.vstack(
+                rx.image(
+                    src="/images/maccode_icon.png",
+                    width="40px",
+                    height="40px",
+                    alt="MacCode"
+                ),
+                rx.text(
+                    "MacCode",
+                    font_size="12px",
+                    font_family="'Press Start 2P', monospace",
+                    color="black",
+                    text_align="center"
+                ),
+                spacing="2",
+                align="center"
+            ),
             on_click=MacCodeState.open_interface_builder,
             position="absolute",
             left="20px",
-            top="220px",
-            width="80px",
-            height="60px",
+            top="260px",
+            width="100px",
+            height="80px",
             bg="#e0e0e0",
             border="1px solid black",
-            font_size="10px",
-            font_family="'Press Start 2P', monospace",
-            color="black",
             cursor="pointer",
             z_index="100",
             style={
-                "white-space": "pre-line",
-                "text-align": "center",
                 "&:hover": {"background": "rgba(0,0,0,0.1)"}
             }
         ),
 
         # MacDraw icon
         rx.button(
-            "🎨\nMacDraw",
+            rx.vstack(
+                rx.image(
+                    src="/images/macdraw_icon.png",
+                    width="40px",
+                    height="40px",
+                    alt="MacDraw"
+                ),
+                rx.text(
+                    "MacDraw",
+                    font_size="12px",
+                    font_family="'Press Start 2P', monospace",
+                    color="black",
+                    text_align="center"
+                ),
+                spacing="2",
+                align="center"
+            ),
             on_click=MacCodeState.open_macdraw,
             position="absolute",
             left="20px",
-            top="380px",
-            width="80px",
-            height="60px",
+            top="460px",
+            width="100px",
+            height="80px",
             bg="#e0e0e0",
             border="1px solid black",
-            font_size="10px",
-            font_family="'Press Start 2P', monospace",
-            color="black",
             cursor="pointer",
             z_index="100",
             style={
-                "white-space": "pre-line",
-                "text-align": "center",
                 "&:hover": {"background": "rgba(0,0,0,0.1)"}
             }
         ),
         rx.button(
-            "🎮\nBreakout",
+            rx.vstack(
+                rx.image(
+                    src="/images/breakout_icon.png",
+                    width="40px",
+                    height="40px",
+                    alt="Breakout"
+                ),
+                rx.text(
+                    "Breakout",
+                    font_size="12px",
+                    font_family="'Press Start 2P', monospace",
+                    color="black",
+                    text_align="center"
+                ),
+                spacing="2",
+                align="center"
+            ),
             on_click=MacCodeState.open_breakout,
             position="absolute",
             left="20px",
-            top="300px",
-            width="80px",
-            height="60px",
+            top="360px",
+            width="100px",
+            height="80px",
             bg="#e0e0e0",
             border="1px solid black",
-            font_size="10px",
-            font_family="'Press Start 2P', monospace",
-            color="black",
             cursor="pointer",
             z_index="100",
             style={
-                "white-space": "pre-line",
-                "text-align": "center",
                 "&:hover": {"background": "rgba(0,0,0,0.1)"}
             }
         ),

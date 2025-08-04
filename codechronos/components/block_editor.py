@@ -248,61 +248,61 @@ def render_block(block: CanvasBlock) -> rx.Component:
     parameter_display = rx.cond(
         block.type == "constant",
         rx.vstack(
-            rx.text(f"name: {block.parameters['name']}", size="1", color="white"),
-            rx.text(f"value: {block.parameters['value']}", size="1", color="white"),
+            rx.text(f"name: {block.parameters['name']}", size="1", color="#1A202C"),
+            rx.text(f"value: {block.parameters['value']}", size="1", color="#1A202C"),
             spacing="1"
         ),
         rx.cond(
             block.type == "print",
-            rx.text(f"text: {block.parameters['text']}", size="1", color="white"),
+            rx.text(f"text: {block.parameters['text']}", size="1", color="#1A202C"),
             rx.cond(
                 block.type == "variable",
                 rx.vstack(
-                    rx.text(f"name: {block.parameters['name']}", size="1", color="white"),
-                    rx.text(f"value: {block.parameters['value']}", size="1", color="white"),
+                    rx.text(f"name: {block.parameters['name']}", size="1", color="#1A202C"),
+                    rx.text(f"value: {block.parameters['value']}", size="1", color="#1A202C"),
                     spacing="1"
                 ),
                 rx.cond(
                     block.type == "if",
-                    rx.text(f"condition: {block.parameters['condition']}", size="1", color="white"),
+                    rx.text(f"condition: {block.parameters['condition']}", size="1", color="#1A202C"),
                     rx.cond(
                         block.type == "for",
                         rx.vstack(
-                            rx.text(f"variable: {block.parameters['variable']}", size="1", color="white"),
-                            rx.text(f"start: {block.parameters['start']}", size="1", color="white"),
-                            rx.text(f"end: {block.parameters['end']}", size="1", color="white"),
+                            rx.text(f"variable: {block.parameters['variable']}", size="1", color="#1A202C"),
+                            rx.text(f"start: {block.parameters['start']}", size="1", color="#1A202C"),
+                            rx.text(f"end: {block.parameters['end']}", size="1", color="#1A202C"),
                             spacing="1"
                         ),
                         rx.cond(
                             block.type == "function",
                             rx.vstack(
-                                rx.text(f"name: {block.parameters['name']}", size="1", color="white"),
-                                rx.text(f"params: {block.parameters['params']}", size="1", color="white"),
+                                rx.text(f"name: {block.parameters['name']}", size="1", color="#1A202C"),
+                                rx.text(f"params: {block.parameters['params']}", size="1", color="#1A202C"),
                                 spacing="1"
                             ),
                             rx.cond(
                                 block.type == "button",
                                 rx.vstack(
-                                    rx.text(f"text: {block.parameters['text']}", size="1", color="white"),
-                                    rx.text(f"action: {block.parameters['action']}", size="1", color="white"),
+                                    rx.text(f"text: {block.parameters['text']}", size="1", color="#1A202C"),
+                                    rx.text(f"action: {block.parameters['action']}", size="1", color="#1A202C"),
                                     spacing="1"
                                 ),
                                 rx.cond(
                                     block.type == "input",
                                     rx.vstack(
-                                        rx.text(f"label: {block.parameters['label']}", size="1", color="white"),
-                                        rx.text(f"variable: {block.parameters['variable']}", size="1", color="white"),
+                                        rx.text(f"label: {block.parameters['label']}", size="1", color="#1A202C"),
+                                        rx.text(f"variable: {block.parameters['variable']}", size="1", color="#1A202C"),
                                         spacing="1"
                                     ),
                                     rx.cond(
                                         block.type == "slider",
                                         rx.vstack(
-                                            rx.text(f"min: {block.parameters['min']}", size="1", color="white"),
-                                            rx.text(f"max: {block.parameters['max']}", size="1", color="white"),
-                                            rx.text(f"variable: {block.parameters['variable']}", size="1", color="white"),
+                                            rx.text(f"min: {block.parameters['min']}", size="1", color="#1A202C"),
+                                            rx.text(f"max: {block.parameters['max']}", size="1", color="#1A202C"),
+                                            rx.text(f"variable: {block.parameters['variable']}", size="1", color="#1A202C"),
                                             spacing="1"
                                         ),
-                                        rx.text("No parameters", size="1", color="white")
+                                        rx.text("No parameters", size="1", color="#1A202C")
                                     )
                                 )
                             )
@@ -319,7 +319,7 @@ def render_block(block: CanvasBlock) -> rx.Component:
                 block.type.upper(),
                 size="2",
                 weight="bold",
-                color="white"
+                color="#1A202C"
             ),
             # Display parameters based on block type
             parameter_display,
