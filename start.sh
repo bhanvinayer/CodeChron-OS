@@ -1,2 +1,3 @@
 #!/bin/bash
-reflex run --env prod --frontend-only false
+#!/bin/bash
+reflex run --env prod
