@@ -85,8 +85,8 @@ All web server logic and routing is handled by Reflex and FastAPI. The main entr
 
 <!--
 Add screenshots here:
-![Playground Home](screenshots/python.jpg)
-![Mac 1984](screenshots/mac.jpg)
+![Playground Home](../screenshots/python.jpg)
+![Mac 1984](../screenshots/mac.jpg)
 -->
 
 ---
