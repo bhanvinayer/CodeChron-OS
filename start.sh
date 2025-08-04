@@ -1,2 +1,9 @@
 #!/bin/bash
-reflex run --env prod --backend-port ${PORT:-3000} --backend-host 0.0.0.0
+set -e
+export PORT=${PORT:-3000}
+
+echo "🔧 Exporting Reflex production build..."
+reflex export --env prod
+
+echo "🚀 Starting Reflex production server on port $PORT..."
+python .web/main.py --port $PORT --host 0.0.0.0
