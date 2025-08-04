@@ -87,6 +87,8 @@ All web server logic and routing is handled by Reflex and FastAPI. The main entr
 
 ![Playground Home](screenshots/python.jpg)
 ![Mac 1984](screenshots/mac.jpg)
+![Block Era](screenshots/block.jpg)
+![VibeCode Era](screenshots/vibe.jpg)
 
 
 ---
